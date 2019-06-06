@@ -1,6 +1,6 @@
 package core;
 
-public interface Loger {
+public interface Logger {
 	public void log(String text);
 	public void warn(String text);
 	public void error(String text);

@@ -8,36 +8,32 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+public class SlimJpg {
 
-public class JPEGFiles {
+    private static int NOT_YET_OPTIMIZED = 0;
+    private static int OPTIMIZING = 1;
+    private static int OPTIMIZED_OK = 2;
+    private static int OPTIMIZED_KO = 3;
+    private static int OPTIMIZED_UNNECESSARY = 4;
 
-    public static int NOT_YET_OPTIMIZED = 0;
-    public static int OPTIMIZING = 1;
-    public static int OPTIMIZED_OK = 2;
-    public static int OPTIMIZED_KO = 3;
-    public static int OPTIMIZED_UNNECESSARY = 4;
+    private JPEGFilesListener listener;
+    private Logger logger;
 
-    private JPEGFilesListener _listener;
-    private Loger logger;
+    private byte[] src;
+    private byte[] dst;
 
-    private byte[] _src;
-    private byte[] _dst;
-    private byte[] _tmp;
+    private long start;
+    private long end;
 
-    private long _originalSrcSize;
+    private int state = NOT_YET_OPTIMIZED;
 
-    private long _start;
-    private long _end;
+    private int jpegQualityFound = 100;
 
-    private int _state = NOT_YET_OPTIMIZED;
+    private int maxOptimSteps = 2 * 7; //max steps in dichotomic search between 0-100 = Math.ceil(Math.log2(101)); multiply per 2 because we do 2 sub step (create jpeg + compute diff)
+    private int currentOptimStep = 0;
 
-    private int _jpegQualityFound = 100;
-
-    private int _maxOptimSteps = 2 * 7; //max steps in dichotomic search between 0-100 = Math.ceil(Math.log2(101)); multiply per 2 because we do 2 sub step (create jpeg + compute diff)
-    private int _currentOptimStep = 0;
-
-    public JPEGFiles(byte[] src) {
-        logger = new Loger() {
+    public SlimJpg(byte[] src) {
+        logger = new Logger() {
             @Override
             public void log(String txt) {
             }
@@ -54,87 +50,83 @@ public class JPEGFiles {
             public void success(String txt) {
             }
         };
-        _listener = new JPEGFilesListener() {
+        listener = new JPEGFilesListener() {
             @Override
-            public void stateChange(JPEGFiles jpegFile) {
+            public void stateChange(SlimJpg jpegFile) {
             }
         };
-        _src = src;
-        _originalSrcSize = _src.length;
+        this.src = src;
     }
 
-    public void setLoger(Loger loger) {
-        logger = loger;
+    public void setLoger(Logger logger) {
+        this.logger = logger;
     }
 
     public void setListener(JPEGFilesListener listener) {
-        _listener = listener;
+        this.listener = listener;
     }
 
     public byte[] getSrc() {
-        return _src;
+        return src;
     }
 
     public byte[] getDst() {
-        return _dst;
+        return dst;
     }
 
     public Double getEarnRate() {
-        Double earn = null;
-        if (_dst != null) {
-            earn = 1. - (_dst.length / (double) _originalSrcSize);
+        if (dst == null) {
+            return 0.;
         }
-        return earn;
+        return (1. - (dst.length / (double) src.length)) * 100;
     }
 
-    public Long getEarnSize() {
-        Long earn = null;
-        if (_dst != null) {
-            earn = _originalSrcSize - _dst.length;
+    public int getEarnSize() {
+        if (dst == null) {
+            return 0;
         }
-        return earn;
+        return src.length - dst.length;
     }
 
     public void reinitState() {
         setState(NOT_YET_OPTIMIZED);
-        _originalSrcSize = _src.length;
     }
 
     public int getState() {
-        return _state;
+        return state;
     }
 
     public long getElaspedTime() {
-        return _end - _start;
+        return end - start;
     }
 
     public int getMaxOptimStep() {
-        return _maxOptimSteps;
+        return maxOptimSteps;
     }
 
     public int getCurrentOptimStep() {
-        return _currentOptimStep;
+        return currentOptimStep;
     }
 
     public int getJpegQualityFound() {
-        return _jpegQualityFound;
+        return jpegQualityFound;
     }
 
     public long getOriginalSrcSize() {
-        return _originalSrcSize;
+        return src.length;
     }
 
     private void setState(int state) {
-        _state = state;
-        if (_state == OPTIMIZING) {
-            _currentOptimStep = 0;
+        this.state = state;
+        if (this.state == OPTIMIZING) {
+            currentOptimStep = 0;
         }
-        _listener.stateChange(this);
+        listener.stateChange(this);
     }
 
     private void incCurrentOptimStep() {
-        _currentOptimStep++;
-        _listener.stateChange(this);
+        currentOptimStep++;
+        listener.stateChange(this);
     }
 
 
@@ -142,7 +134,7 @@ public class JPEGFiles {
         logger.log("   Trying quality " + quality + "%");
 
         long start1 = System.currentTimeMillis();
-        _tmp = ImageUtils.createJPEG(_src, quality);
+        byte[] _tmp = ImageUtils.createJPEG(src, quality);
         long end1 = System.currentTimeMillis();
         logger.log("   * Size : " + ReadableUtils.fileSize(_tmp.length) + "\t (" + ReadableUtils.interval(end1 - start1) + ")");
         incCurrentOptimStep();
@@ -157,7 +149,7 @@ public class JPEGFiles {
         diff *= 100.;
         if (diff < maxVisualDiff) {
             logger.log("   [OK] Visual diff is correct.");
-            _jpegQualityFound = quality;
+            jpegQualityFound = quality;
             return true;
         } else {
             logger.log("   [KO] Visual diff is too important, try a better quality.");
@@ -166,7 +158,7 @@ public class JPEGFiles {
     }
 
     private boolean optimize(double maxVisualDiff) throws IOException {
-        BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(_src));
+        BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(src));
 
         int minQ = 0;
         int maxQ = 100;
@@ -186,7 +178,7 @@ public class JPEGFiles {
         if ((foundQuality >= 0) && (foundQuality < 100)) {
             logger.log(" - [OK] Best quality found is " + foundQuality + "%");
             logger.log("   * Creating result destination file.");
-            _dst = ImageUtils.createJPEG(_src, foundQuality);
+            dst = ImageUtils.createJPEG(src, foundQuality);
             return true;
         } else {
             logger.log(" - [KO] Unable to optimize the file");
@@ -196,31 +188,31 @@ public class JPEGFiles {
 
     public byte[] optimize(double maxVisualDiff, long minFileSizeToOptimize) throws IOException {
         System.out.println("Max Diff : " + maxVisualDiff);
-        _start = System.currentTimeMillis();
+        start = System.currentTimeMillis();
         setState(OPTIMIZING);
-        logger.log("Optimizing the input (" + ReadableUtils.fileSize(_originalSrcSize) + ")");
+        logger.log("Optimizing the input (" + ReadableUtils.fileSize(src.length) + ")");
 
 
-        if (_src.length <= minFileSizeToOptimize) {
+        if (src.length <= minFileSizeToOptimize) {
             setState(OPTIMIZED_UNNECESSARY);
-            return _src;
+            return src;
         } else {
             boolean isOptimized = optimize(maxVisualDiff);
             setState(isOptimized ? OPTIMIZED_OK : OPTIMIZED_KO);
         }
 
-        _end = System.currentTimeMillis();
+        end = System.currentTimeMillis();
 
-        if (_state == OPTIMIZED_OK) {
-            logger.success("Optimization done: from " + ReadableUtils.fileSize(_originalSrcSize) + " to " + ReadableUtils.fileSize(_dst.length) + ". Earn " + ReadableUtils.rate(getEarnRate()));
-        } else if (_state == OPTIMIZED_KO) {
+        if (state == OPTIMIZED_OK) {
+            logger.success("Optimization done: from " + ReadableUtils.fileSize(src.length) + " to " + ReadableUtils.fileSize(dst.length) + ". Earn " + ReadableUtils.rate(getEarnRate()));
+        } else if (state == OPTIMIZED_KO) {
             logger.error("Unable to optimize file (too many visual difference when compressing).");
-        } else if (_state == OPTIMIZED_UNNECESSARY) {
+        } else if (state == OPTIMIZED_UNNECESSARY) {
             logger.success("Optimization unecessary (file already too small).");
         }
-        logger.log("Done in " + ReadableUtils.interval(_end - _start));
+        logger.log("Done in " + ReadableUtils.interval(end - start));
         logger.log("--------------------------------------------------------------------------------------");
 
-        return _dst;
+        return dst;
     }
 }

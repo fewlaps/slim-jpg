@@ -1,5 +1,5 @@
 package core;
 
 public interface JPEGFilesListener {
-	public void stateChange(JPEGFiles jpegFile);
+	public void stateChange(SlimJpg jpegFile);
 }
