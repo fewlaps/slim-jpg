@@ -3,9 +3,11 @@ package utils;
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -155,7 +157,7 @@ public class ImageUtils {
 
     //JPEG Copy input image to output image with the new quality, and copy too the EXIF data from input to output!
     public static byte[] createJPEG(byte[] input, int quality) throws IOException {
-        ImageInputStream iis = ImageIO.createImageInputStream(input);
+        ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(input));
         Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
         ImageReader reader = readers.next();
         reader.setInput(iis, false);
@@ -164,7 +166,8 @@ public class ImageUtils {
 
         final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        writer.setOutput(outputStream);
+        ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream((outputStream));
+        writer.setOutput(imageOutputStream);
 
         ImageWriteParam iwParam = writer.getDefaultWriteParam();
         iwParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

@@ -18,7 +18,7 @@ public class JPEGFiles {
     public static int OPTIMIZED_UNNECESSARY = 4;
 
     private JPEGFilesListener _listener;
-    private Loger _loger;
+    private Loger logger;
 
     private byte[] _src;
     private byte[] _dst;
@@ -37,14 +37,34 @@ public class JPEGFiles {
     private int _currentOptimStep = 0;
 
     public JPEGFiles(byte[] src) {
-        _loger = null;
-        _listener = null;
+        logger = new Loger() {
+            @Override
+            public void log(String txt) {
+            }
+
+            @Override
+            public void warn(String txt) {
+            }
+
+            @Override
+            public void error(String txt) {
+            }
+
+            @Override
+            public void success(String txt) {
+            }
+        };
+        _listener = new JPEGFilesListener() {
+            @Override
+            public void stateChange(JPEGFiles jpegFile) {
+            }
+        };
         _src = src;
         _originalSrcSize = _src.length;
     }
 
     public void setLoger(Loger loger) {
-        _loger = loger;
+        logger = loger;
     }
 
     public void setListener(JPEGFilesListener listener) {
@@ -119,12 +139,12 @@ public class JPEGFiles {
 
 
     private boolean optimize(BufferedImage img1, int quality, double maxVisualDiff) throws IOException {
-        log("   Trying quality " + quality + "%");
+        logger.log("   Trying quality " + quality + "%");
 
         long start1 = System.currentTimeMillis();
         _tmp = ImageUtils.createJPEG(_src, quality);
         long end1 = System.currentTimeMillis();
-        log("   * Size : " + ReadableUtils.fileSize(_tmp.length) + "\t (" + ReadableUtils.interval(end1 - start1) + ")");
+        logger.log("   * Size : " + ReadableUtils.fileSize(_tmp.length) + "\t (" + ReadableUtils.interval(end1 - start1) + ")");
         incCurrentOptimStep();
 
         long start2 = System.currentTimeMillis();
@@ -133,14 +153,14 @@ public class JPEGFiles {
         long end2 = System.currentTimeMillis();
         incCurrentOptimStep();
 
-        log("   * Diff : " + ReadableUtils.rate(diff) + "\t (" + ReadableUtils.interval(end2 - start2) + ")");
+        logger.log("   * Diff : " + ReadableUtils.rate(diff) + "\t (" + ReadableUtils.interval(end2 - start2) + ")");
         diff *= 100.;
         if (diff < maxVisualDiff) {
-            log("   [OK] Visual diff is correct.");
+            logger.log("   [OK] Visual diff is correct.");
             _jpegQualityFound = quality;
             return true;
         } else {
-            log("   [KO] Visual diff is too important, try a better quality.");
+            logger.log("   [KO] Visual diff is too important, try a better quality.");
             return false;
         }
     }
@@ -152,7 +172,7 @@ public class JPEGFiles {
         int maxQ = 100;
         int foundQuality = -1;
         while (minQ <= maxQ) {
-            log(" - Dichotomic search between (" + minQ + ", " + maxQ + ") qualities :");
+            logger.log(" - Dichotomic search between (" + minQ + ", " + maxQ + ") qualities :");
             int quality = (int) Math.floor((minQ + maxQ) / 2.);
             if (optimize(img1, quality, maxVisualDiff) == true) {
                 foundQuality = quality;
@@ -164,12 +184,12 @@ public class JPEGFiles {
 
 
         if ((foundQuality >= 0) && (foundQuality < 100)) {
-            log(" - [OK] Best quality found is " + foundQuality + "%");
-            log("   * Creating result destination file.");
+            logger.log(" - [OK] Best quality found is " + foundQuality + "%");
+            logger.log("   * Creating result destination file.");
             _dst = ImageUtils.createJPEG(_src, foundQuality);
             return true;
         } else {
-            log(" - [KO] Unable to optimize the file");
+            logger.log(" - [KO] Unable to optimize the file");
             return false;
         }
     }
@@ -178,7 +198,7 @@ public class JPEGFiles {
         System.out.println("Max Diff : " + maxVisualDiff);
         _start = System.currentTimeMillis();
         setState(OPTIMIZING);
-        log("Optimizing the input (" + ReadableUtils.fileSize(_originalSrcSize) + ")");
+        logger.log("Optimizing the input (" + ReadableUtils.fileSize(_originalSrcSize) + ")");
 
 
         if (_src.length <= minFileSizeToOptimize) {
@@ -192,37 +212,15 @@ public class JPEGFiles {
         _end = System.currentTimeMillis();
 
         if (_state == OPTIMIZED_OK) {
-            success("Optimization done: from " + ReadableUtils.fileSize(_originalSrcSize) + " to " + ReadableUtils.fileSize(_dst.length) + ". Earn " + ReadableUtils.rate(getEarnRate()));
+            logger.success("Optimization done: from " + ReadableUtils.fileSize(_originalSrcSize) + " to " + ReadableUtils.fileSize(_dst.length) + ". Earn " + ReadableUtils.rate(getEarnRate()));
         } else if (_state == OPTIMIZED_KO) {
-            error("Unable to optimize file (too many visual difference when compressing).");
+            logger.error("Unable to optimize file (too many visual difference when compressing).");
         } else if (_state == OPTIMIZED_UNNECESSARY) {
-            success("Optimization unecessary (file already too small).");
+            logger.success("Optimization unecessary (file already too small).");
         }
-        log("Done in " + ReadableUtils.interval(_end - _start));
-        log("--------------------------------------------------------------------------------------");
+        logger.log("Done in " + ReadableUtils.interval(_end - _start));
+        logger.log("--------------------------------------------------------------------------------------");
 
-        return _src;
-    }
-
-    //----------------------------------------------------------
-
-    private void log(String txt) {
-        System.out.println(txt);
-        _loger.log(txt, true);
-    }
-
-    private void error(String txt) {
-        System.err.println(txt);
-        _loger.error(txt, true);
-    }
-
-    private void warn(String txt) {
-        System.out.println(txt);
-        _loger.warn(txt, true);
-    }
-
-    private void success(String txt) {
-        System.out.println(txt);
-        _loger.success(txt, true);
+        return _dst;
     }
 }
