@@ -3,10 +3,7 @@ package utils;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 import javax.imageio.IIOImage;
@@ -163,18 +160,17 @@ public class ImageUtils {
 	}	
 	
 	//JPEG Copy input image to output image with the new quality, and copy too the EXIF data from input to output!
-	public static void createJPEG(File input, File output, int quality) throws IOException {
-		FileUtils.truncateFile(output);
-		
+	public static byte[] createJPEG(byte[] input, int quality) throws IOException {
 		ImageInputStream iis = ImageIO.createImageInputStream(input);
 		Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
-		ImageReader reader = (ImageReader) readers.next();
+		ImageReader reader = readers.next();
 		reader.setInput(iis, false);
 		IIOMetadata metadata = reader.getImageMetadata(0);
 		BufferedImage bi = reader.read(0);
 		
 		final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-		writer.setOutput(new FileImageOutputStream(output));
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		writer.setOutput(outputStream);
 		
 		ImageWriteParam iwParam = writer.getDefaultWriteParam();
 		iwParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
@@ -184,8 +180,8 @@ public class ImageUtils {
 		writer.dispose();
 		
 		reader.dispose();
-		
-		writeQualityInJPEG(output, quality);
+
+		return outputStream.toByteArray();
 	}
 	
 	//Save the input image as a jpeg file
@@ -228,14 +224,4 @@ public class ImageUtils {
 			return quality;
 		}
 	}
-	
-	//Special trick to write the quality in the last byte of the file (because JFIF/EXIF do not have this info)
-	private static void writeQualityInJPEG(File output, int quality) throws IOException {
-		FileOutputStream out = new FileOutputStream(output, true);
-		out.write(quality & 0x7F);
-		out.close();
-	}
-	
-
-	
 }
