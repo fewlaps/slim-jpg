@@ -66,7 +66,7 @@ public class SlimJpg {
     }
 
     private boolean isThisQualityTooHigh(BufferedImage img1, int quality, double maxVisualDiff) throws IOException {
-        byte[] optimizedPicture = ImageUtils.createJPEG(src, quality, true);
+        byte[] optimizedPicture = ImageUtils.createJPEG(src, quality, false);
 
         BufferedImage img2 = ImageIO.read(new ByteArrayInputStream(optimizedPicture));
         double diff = ImageUtils.computeSimilarityRGB(img1, img2);
