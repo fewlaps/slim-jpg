@@ -18,7 +18,7 @@ public class SlimJpg {
         this.src = src;
     }
 
-    public Result optimize(double maxVisualDiff, long minFileSizeToOptimize, boolean keepMetadata) throws IOException {
+    public Result optimize(double maxVisualDiff, boolean keepMetadata) throws IOException {
         long start = System.currentTimeMillis();
         InternalResult optimizedPicture = isThisQualityTooHigh(maxVisualDiff, keepMetadata);
         long end = System.currentTimeMillis();

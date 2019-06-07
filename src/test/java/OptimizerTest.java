@@ -27,9 +27,9 @@ public class OptimizerTest {
 
         byte[] original = new BinaryFileReader().load(picture);
         SlimJpg slimWithoutMetadata = new SlimJpg(original);
-        Result optimizedWithoutMetadata = slimWithoutMetadata.optimize(1, 0, false);
+        Result optimizedWithoutMetadata = slimWithoutMetadata.optimize(1, false);
         SlimJpg slimWithMetadata = new SlimJpg(original);
-        Result optimizedWithMetadata = slimWithMetadata.optimize(1, 0, true);
+        Result optimizedWithMetadata = slimWithMetadata.optimize(1, true);
 
         System.out.println("Size: " + printSizeInMb(original.length));
         System.out.println("\n- Optimization removing metadata");
