@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static utils.ReadableUtils.*;
 
 public class OptimizerTest {
 
@@ -31,19 +32,19 @@ public class OptimizerTest {
         Result optimizedWithoutMetadata = slimmer.optimize(original, 1, false);
         Result optimizedWithMetadata = slimmer.optimize(original, 1, true);
 
-        System.out.println("Size: " + printSizeInMb(original.length));
+        System.out.println("Size: " + formatFileSize(original.length));
         System.out.println("\n- Optimization removing metadata");
-        System.out.println("Size: " + printSizeInMb(optimizedWithoutMetadata.getPicture().length));
-        System.out.println("Saved size: " + printSizeInMb(optimizedWithoutMetadata.getSavedBytes()));
-        System.out.println("Saved ratio: " + optimizedWithoutMetadata.getSavedRatio() + "%");
+        System.out.println("Size: " + formatFileSize((optimizedWithoutMetadata.getPicture().length)));
+        System.out.println("Saved size: " + formatFileSize((optimizedWithoutMetadata.getSavedBytes())));
+        System.out.println("Saved ratio: " + formatPercentage(optimizedWithoutMetadata.getSavedRatio()));
         System.out.println("JPEG quality used: " + optimizedWithoutMetadata.getJpegQualityUsed() + "%");
-        System.out.println("Time: " + optimizedWithoutMetadata.getElapsedTime() + "ms");
+        System.out.println("Time: " + formatElapsedTime(optimizedWithoutMetadata.getElapsedTime()));
         System.out.println("\n- Optimization keeping metadata");
-        System.out.println("Size: " + printSizeInMb(optimizedWithMetadata.getPicture().length));
-        System.out.println("Saved size: " + printSizeInMb(optimizedWithMetadata.getSavedBytes()));
-        System.out.println("Saved ratio: " + optimizedWithMetadata.getSavedRatio() + "%");
+        System.out.println("Size: " + formatFileSize((optimizedWithMetadata.getPicture().length)));
+        System.out.println("Saved size: " + formatFileSize((optimizedWithMetadata.getSavedBytes())));
+        System.out.println("Saved ratio: " + formatPercentage(optimizedWithMetadata.getSavedRatio()));
         System.out.println("JPEG quality used: " + optimizedWithoutMetadata.getJpegQualityUsed() + "%");
-        System.out.println("Time: " + optimizedWithoutMetadata.getElapsedTime() + "ms");
+        System.out.println("Time: " + formatElapsedTime(optimizedWithoutMetadata.getElapsedTime()));
 
         File directory = new File(OUT_DIRECTORY);
         directory.mkdirs();
@@ -58,9 +59,5 @@ public class OptimizerTest {
         assertTrue(original.length > optimizedWithoutMetadata.getPicture().length);
         assertTrue(original.length > optimizedWithMetadata.getPicture().length);
         assertTrue(optimizedWithMetadata.getPicture().length >= optimizedWithoutMetadata.getPicture().length);
-    }
-
-    private String printSizeInMb(long length) {
-        return length / 1024 + " KB";
     }
 }

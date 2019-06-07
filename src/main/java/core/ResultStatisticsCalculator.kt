@@ -7,6 +7,6 @@ class ResultStatisticsCalculator(val source: ByteArray, val result: ByteArray) {
     }
 
     fun getSavedRatio(): Double? {
-        return (1.0 - result.size / source.size.toDouble()) * 100
+        return (1.0 - result.size / source.size.toDouble())
     }
 }
