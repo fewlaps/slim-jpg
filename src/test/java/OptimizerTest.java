@@ -9,7 +9,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class OptimizerTest {
 
-    public static final String OUT_DIRECTORY = "out/images/";
+    private static final String OUT_DIRECTORY = "out/images/";
 
     @Test
     public void testSimCards() throws IOException {
@@ -33,10 +33,12 @@ public class OptimizerTest {
         System.out.println("optimized without metadata size: " + printSizeInMb(optimizedWithoutMetadata.getPicture().length));
         System.out.println("saved size without metadata: " + printSizeInMb(optimizedWithoutMetadata.getSavedBytes()));
         System.out.println("saved size without metadata: " + optimizedWithoutMetadata.getSavedRatio() + "%");
+        System.out.println("JPEG quality used: " + optimizedWithoutMetadata.getJpegQualityUsed() + "%");
         System.out.println();
         System.out.println("optimized with metadata size: " + printSizeInMb(optimizedWithMetadata.getPicture().length));
         System.out.println("saved size with metadata: " + printSizeInMb(optimizedWithMetadata.getSavedBytes()));
         System.out.println("saved size with metadata: " + optimizedWithMetadata.getSavedRatio() + "%");
+        System.out.println("JPEG quality used: " + optimizedWithoutMetadata.getJpegQualityUsed() + "%");
 
         File directory = new File(OUT_DIRECTORY);
         directory.mkdirs();
