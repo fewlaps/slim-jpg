@@ -134,7 +134,7 @@ public class SlimJpg {
         logger.log("   Trying quality " + quality + "%");
 
         long start1 = System.currentTimeMillis();
-        byte[] _tmp = ImageUtils.createJPEG(src, quality);
+        byte[] _tmp = ImageUtils.createJPEG(src, quality, true);
         long end1 = System.currentTimeMillis();
         logger.log("   * Size : " + ReadableUtils.fileSize(_tmp.length) + "\t (" + ReadableUtils.interval(end1 - start1) + ")");
         incCurrentOptimStep();
@@ -157,7 +157,7 @@ public class SlimJpg {
         }
     }
 
-    private boolean optimize(double maxVisualDiff) throws IOException {
+    private boolean optimize(double maxVisualDiff, boolean keepMetadata) throws IOException {
         BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(src));
 
         int minQ = 0;
@@ -178,7 +178,7 @@ public class SlimJpg {
         if ((foundQuality >= 0) && (foundQuality < 100)) {
             logger.log(" - [OK] Best quality found is " + foundQuality + "%");
             logger.log("   * Creating result destination file.");
-            dst = ImageUtils.createJPEG(src, foundQuality);
+            dst = ImageUtils.createJPEG(src, foundQuality, keepMetadata);
             return true;
         } else {
             logger.log(" - [KO] Unable to optimize the file");
@@ -186,8 +186,7 @@ public class SlimJpg {
         }
     }
 
-    public byte[] optimize(double maxVisualDiff, long minFileSizeToOptimize) throws IOException {
-        System.out.println("Max Diff : " + maxVisualDiff);
+    public byte[] optimize(double maxVisualDiff, long minFileSizeToOptimize, boolean keepMetadata) throws IOException {
         start = System.currentTimeMillis();
         setState(OPTIMIZING);
         logger.log("Optimizing the input (" + ReadableUtils.fileSize(src.length) + ")");
@@ -197,7 +196,7 @@ public class SlimJpg {
             setState(OPTIMIZED_UNNECESSARY);
             return src;
         } else {
-            boolean isOptimized = optimize(maxVisualDiff);
+            boolean isOptimized = optimize(maxVisualDiff, keepMetadata);
             setState(isOptimized ? OPTIMIZED_OK : OPTIMIZED_KO);
         }
 

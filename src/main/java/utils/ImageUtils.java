@@ -156,12 +156,12 @@ public class ImageUtils {
     }
 
     //JPEG Copy input image to output image with the new quality, and copy too the EXIF data from input to output!
-    public static byte[] createJPEG(byte[] input, int quality) throws IOException {
+    public static byte[] createJPEG(byte[] input, int quality, boolean keepMetadata) throws IOException {
         ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(input));
         Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
         ImageReader reader = readers.next();
         reader.setInput(iis, false);
-        IIOMetadata metadata = reader.getImageMetadata(0);
+
         BufferedImage bi = reader.read(0);
 
         final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
@@ -173,9 +173,18 @@ public class ImageUtils {
         iwParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         iwParam.setCompressionQuality(quality / 100f);
 
-        writer.write(null, new IIOImage(bi, null, metadata), iwParam);
-        writer.dispose();
+        IIOMetadata metadata = null;
+        if (keepMetadata) {
+            metadata = reader.getImageMetadata(0);
+        }
 
+        try {
+            writer.write(null, new IIOImage(bi, null, metadata), iwParam);
+        } catch (Exception e) {
+            return createJPEG(input, quality, false);
+        }
+
+        writer.dispose();
         reader.dispose();
 
         return outputStream.toByteArray();
