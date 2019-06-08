@@ -10,7 +10,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static utils.ReadableUtils.*;
 
-public class JpegOptimizerCompressionTest {
+public class JpegOptimizerMaxDiffTest {
 
     private static final String OUT_DIRECTORY = "out/images/";
 
@@ -61,8 +61,8 @@ public class JpegOptimizerCompressionTest {
         byte[] original = new BinaryFileReader().load(picture);
         JpegOptimizer slimmer = new JpegOptimizer();
 
-        Result optimizedWithoutMetadata = slimmer.optimize(original, maxVisualDiff, false);
-        Result optimizedWithMetadata = slimmer.optimize(original, maxVisualDiff, true);
+        Result optimizedWithoutMetadata = slimmer.optimize(original, maxVisualDiff, -1, false);
+        Result optimizedWithMetadata = slimmer.optimize(original, maxVisualDiff, -1, true);
 
         System.out.println("Size: " + formatFileSize(original.length));
         System.out.println("\n- Optimization removing metadata");

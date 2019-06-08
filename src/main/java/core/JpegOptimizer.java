@@ -21,7 +21,7 @@ public class JpegOptimizer {
         comparator = new BufferedImageComparator();
     }
 
-    public Result optimize(byte[] source, double maxVisualDiff, boolean keepMetadata) throws IOException {
+    public Result optimize(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
         if (source == null) {
             throw new IllegalArgumentException("source should contain the byte[] of a JPEG image");
         }
@@ -30,7 +30,7 @@ public class JpegOptimizer {
         }
 
         long start = System.currentTimeMillis();
-        InternalResult optimizedPicture = getOptimizedPicture(source, maxVisualDiff, keepMetadata);
+        InternalResult optimizedPicture = getOptimizedPicture(source, maxVisualDiff, maxWeight, keepMetadata);
         long end = System.currentTimeMillis();
 
         long elapsedTime = end - start;
@@ -44,7 +44,7 @@ public class JpegOptimizer {
         );
     }
 
-    private InternalResult getOptimizedPicture(byte[] source, double maxVisualDiff, boolean keepMetadata) throws IOException {
+    private InternalResult getOptimizedPicture(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
         BufferedImage sourceBufferedImage = ImageIO.read(new ByteArrayInputStream(source));
 
         int minQuality = MIN_JPEG_QUALITY;
@@ -54,7 +54,7 @@ public class JpegOptimizer {
         while (minQuality <= maxQuality) {
             quality = (int) Math.floor((minQuality + maxQuality) / 2.);
 
-            if (isThisQualityTooHigh(source, sourceBufferedImage, quality, maxVisualDiff)) {
+            if (isThisQualityTooHigh(source, sourceBufferedImage, quality, maxVisualDiff, maxWeight, keepMetadata)) {
                 maxQuality = quality - 1;
             } else {
                 minQuality = quality + 1;
@@ -64,6 +64,10 @@ public class JpegOptimizer {
         byte[] result;
         if (quality < MAX_JPEG_QUALITY) {
             result = compressor.writeJpg(source, quality, keepMetadata);
+            if (maxWeightIsDefined(maxWeight) && result.length > maxWeight) {
+                quality -= 1;
+                result = compressor.writeJpg(source, quality, keepMetadata);
+            }
             if (result.length > source.length) {
                 result = source;
                 quality = MAX_JPEG_QUALITY;
@@ -71,7 +75,7 @@ public class JpegOptimizer {
         } else if (keepMetadata) {
             result = source;
         } else {
-            InternalResult optimizedPictureWithoutMetadata = getOptimizedPicture(source, maxVisualDiff + 0.5, false);
+            InternalResult optimizedPictureWithoutMetadata = getOptimizedPicture(source, maxVisualDiff + 0.5, maxWeight, false);
             result = optimizedPictureWithoutMetadata.getPicture();
             quality = optimizedPictureWithoutMetadata.getJpegQualityUsed();
         }
@@ -82,13 +86,21 @@ public class JpegOptimizer {
         );
     }
 
-    private boolean isThisQualityTooHigh(byte[] source, BufferedImage sourceBufferedImage, int quality, double maxVisualDiffPorcentage) throws IOException {
-        byte[] optimizedPicture = compressor.writeJpg(source, quality, false);
+    private boolean isThisQualityTooHigh(byte[] source, BufferedImage sourceBufferedImage, int quality, double maxVisualDiffPorcentage, long maxWeight, boolean keepMetadata) throws IOException {
+        byte[] optimizedPicture = compressor.writeJpg(source, quality, keepMetadata);
+        if (maxWeightIsDefined(maxWeight) && optimizedPicture.length > maxWeight) {
+            return true;
+        }
+
         BufferedImage bufferedOptimizedPicture = ImageIO.read(new ByteArrayInputStream(optimizedPicture));
 
         double diff = comparator.getDifferencePercentage(sourceBufferedImage, bufferedOptimizedPicture);
         diff *= 100.;
 
         return diff < maxVisualDiffPorcentage;
+    }
+
+    private boolean maxWeightIsDefined(long maxWeight) {
+        return maxWeight > 0;
     }
 }
