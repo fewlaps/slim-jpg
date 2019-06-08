@@ -64,10 +64,16 @@ public class JpegOptimizer {
         byte[] result;
         if (quality < MAX_JPEG_QUALITY) {
             result = compressor.writeJpg(source, quality, keepMetadata);
+            if (result.length > source.length) {
+                result = source;
+                quality = MAX_JPEG_QUALITY;
+            }
         } else if (keepMetadata) {
             result = source;
         } else {
-            result = compressor.writeJpg(source, MAX_JPEG_QUALITY, false);
+            InternalResult optimizedPictureWithoutMetadata = getOptimizedPicture(source, maxVisualDiff + 0.5, false);
+            result = optimizedPictureWithoutMetadata.getPicture();
+            quality = optimizedPictureWithoutMetadata.getJpegQualityUsed();
         }
 
         return new InternalResult(

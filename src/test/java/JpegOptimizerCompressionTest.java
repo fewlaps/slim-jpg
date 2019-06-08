@@ -1,5 +1,6 @@
-import core.Result;
 import core.JpegOptimizer;
+import core.Result;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,19 +20,42 @@ public class JpegOptimizerCompressionTest {
      */
     @Test
     public void testSimCards() throws IOException {
-        test("antiviaje-sim-cards.jpg", 591590, 586350, 1);
+        String file = "antiviaje-sim-cards.jpg";
+        test(file, 1411471, 1406130, 0.5);
+        test(file, 591590, 586350, 1);
+    }
+
+    /**
+     * A blurry picture taken at night.
+     * The picture doesn't have any metadata.
+     */
+    @Test
+    public void testEthiopiaVolcano() throws IOException {
+        String file = "ethiopia-volcano.jpg";
+        test(file, 776229, 770116, 0.5);
+        test(file, 312175, 306115, 1);
     }
 
     /**
      * This picture has a flat background with some shadows. It drives to JPEG artifacts.
-     * The picture is an screenshot from the QuitNow! website.
+     * The picture doesn't have any metadata.
      */
     @Test
     public void testQuitNow() throws IOException {
-        test("download-quitnow.jpg", 31805, 31805, 1);
+        String file = "download-quitnow.jpg";
+        test(file, 59115, 59115, 0.5);
+        test(file, 31805, 31805, 1);
+    }
+
+    @Test
+    public void optimizedPicturesCantWeightMoreThanOriginalOnes() throws IOException {
+        int maxVisualDiff = 0;
+        test("antiviaje-sim-cards.jpg", 2017089, 1406130, maxVisualDiff);
+        test("download-quitnow.jpg", 134156, 59115, maxVisualDiff);
     }
 
     private void test(String picture, long expectedOptimizedSizeWithMetadata, long expectedOptimizedSizeWithoutMetadata, double maxVisualDiff) throws IOException {
+        System.out.println("\n\n- Max visual diff: " + maxVisualDiff);
         System.out.println("- Original file: " + picture);
 
         byte[] original = new BinaryFileReader().load(picture);
@@ -57,15 +81,24 @@ public class JpegOptimizerCompressionTest {
         File directory = new File(OUT_DIRECTORY);
         directory.mkdirs();
         BinaryFileWriter writer = new BinaryFileWriter();
-        writer.write(original, OUT_DIRECTORY + "original_" + picture);
-        writer.write(optimizedWithoutMetadata.getPicture(), OUT_DIRECTORY + "optimized_wom_" + picture);
-        writer.write(optimizedWithMetadata.getPicture(), OUT_DIRECTORY + "optimized_wm_" + picture);
+
+        writer.write(original, OUT_DIRECTORY + picture);
+
+        picture = picture.replaceAll(".jpg", "");
+
+        writer.write(optimizedWithoutMetadata.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, "optimized_keep_metadata"));
+        writer.write(optimizedWithMetadata.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, "opt_no_metadata"));
 
         assertEquals(expectedOptimizedSizeWithMetadata, optimizedWithMetadata.getPicture().length);
         assertEquals(expectedOptimizedSizeWithoutMetadata, optimizedWithoutMetadata.getPicture().length);
 
-        assertTrue(original.length > optimizedWithoutMetadata.getPicture().length);
-        assertTrue(original.length > optimizedWithMetadata.getPicture().length);
+        assertTrue(original.length >= optimizedWithoutMetadata.getPicture().length);
+        assertTrue(original.length >= optimizedWithMetadata.getPicture().length);
         assertTrue(optimizedWithMetadata.getPicture().length >= optimizedWithoutMetadata.getPicture().length);
+    }
+
+    @NotNull
+    private String formatFileName(String picture, double maxVisualDiff, String type) {
+        return picture + "-" + type + "-" + maxVisualDiff + ".jpg";
     }
 }
