@@ -1,14 +1,38 @@
-*.class
+# Eclipse
+.classpath
+.project
+.settings
+eclipsebin
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Ant
+bin
+gen
+build
+out
+lib
 
-# Package Files #
-*.jar
-*.war
-*.ear
-*.bat
-*.ini
+# Maven
+target
+pom.xml.*
+release.properties
+coverage.ec
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# IntelliJ
+.idea
+*.iml
+*.iws
+*.ipr
+classes
+gen-external-apklibs
+
+# Robolectric
+tmp
+
+.DS_Store
+
+# Gradle
+.gradle
+jniLibs
+build
+local.properties
+reports
