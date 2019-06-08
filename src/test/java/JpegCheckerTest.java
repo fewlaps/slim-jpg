@@ -33,4 +33,9 @@ public class JpegCheckerTest extends BaseTest {
     public void checkGif() throws IOException {
         assertFalse(checker.isJpeg(getBytes(COLOMBIA)));
     }
+
+    @Test
+    public void checkBmp() throws IOException {
+        assertFalse(checker.isJpeg(getBytes(CHINA)));
+    }
 }
