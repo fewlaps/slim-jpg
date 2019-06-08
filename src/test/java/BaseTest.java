@@ -16,10 +16,11 @@ class BaseTest {
     static final String SIMCARDS = "simcards.jpg";
     static final String WEBSITE = "website.jpg";
     static final String VOLCANO = "volcano.jpg";
-    static final String AVATAR = "avatar.jpg";
+    static final String AVATAR = "avatar.jpg"; // 1280 x 1280
     static final String SEA = "sea.png";
     static final String COLOMBIA = "colombia.gif";
     static final String CHINA = "china.bmp";
+    static final String THAILAND = "thailand.jpg"; // 800x600
 
     private static final String OUT_DIRECTORY = "out/images/";
 
