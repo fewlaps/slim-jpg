@@ -43,10 +43,6 @@ publish {
     website = 'https://github.com/Fewlaps/slimjpg'
 }
 
-dependencies {
-    testCompile 'org.mockito:mockito-all:1.8.4'
-}
-
 cobertura.coverageFormats = ['html', 'xml']
 compileKotlin {
     kotlinOptions {
