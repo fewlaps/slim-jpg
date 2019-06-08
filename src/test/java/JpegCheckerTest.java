@@ -1,5 +1,5 @@
 
-import core.JpegChecker;
+import com.fewlaps.slimjpg.core.util.JpegChecker;
 import org.junit.Before;
 import org.junit.Test;
 

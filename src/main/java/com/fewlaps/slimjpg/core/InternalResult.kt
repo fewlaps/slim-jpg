@@ -1,4 +1,4 @@
-package core
+package com.fewlaps.slimjpg.core
 
 data class InternalResult(
         val picture: ByteArray,

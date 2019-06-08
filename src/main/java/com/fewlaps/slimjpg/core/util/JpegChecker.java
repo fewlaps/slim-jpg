@@ -1,4 +1,4 @@
-package core;
+package com.fewlaps.slimjpg.core.util;
 
 public class JpegChecker {
 

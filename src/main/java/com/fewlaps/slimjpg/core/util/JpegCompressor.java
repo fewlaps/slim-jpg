@@ -1,4 +1,4 @@
-package utils;
+package com.fewlaps.slimjpg.core.util;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;

@@ -1,4 +1,4 @@
-package utils;
+package com.fewlaps.slimjpg.core.util;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;

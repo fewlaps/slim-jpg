@@ -1,8 +1,7 @@
-package utils;
+package com.fewlaps.slimjpg.core.util;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
-
 
 public class ReadableUtils {
 

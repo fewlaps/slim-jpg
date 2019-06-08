@@ -1,7 +1,7 @@
 package com.fewlaps.slimjpg
 
-import core.JpegOptimizer
-import core.Result
+import com.fewlaps.slimjpg.core.JpegOptimizer
+import com.fewlaps.slimjpg.core.Result
 
 data class RequestCreator(val image: ByteArray,
                           val maxVisualDiff: Double = 0.0,

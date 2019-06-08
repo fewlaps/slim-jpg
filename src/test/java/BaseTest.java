@@ -1,5 +1,5 @@
-import core.JpegOptimizer;
-import core.Result;
+import com.fewlaps.slimjpg.core.JpegOptimizer;
+import com.fewlaps.slimjpg.core.Result;
 import file.BinaryFileReader;
 import file.BinaryFileWriter;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static utils.ReadableUtils.*;
+import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 
 class BaseTest {
 

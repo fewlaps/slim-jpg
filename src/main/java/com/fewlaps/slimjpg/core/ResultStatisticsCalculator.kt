@@ -1,4 +1,4 @@
-package core
+package com.fewlaps.slimjpg.core
 
 class ResultStatisticsCalculator(val source: ByteArray, val result: ByteArray) {
 

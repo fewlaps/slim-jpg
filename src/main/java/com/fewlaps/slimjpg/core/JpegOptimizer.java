@@ -1,7 +1,8 @@
-package core;
+package com.fewlaps.slimjpg.core;
 
-import utils.BufferedImageComparator;
-import utils.JpegCompressor;
+import com.fewlaps.slimjpg.core.util.BufferedImageComparator;
+import com.fewlaps.slimjpg.core.util.JpegChecker;
+import com.fewlaps.slimjpg.core.util.JpegCompressor;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,7 +31,7 @@ public class JpegOptimizer {
         if (maxVisualDiff < 0 || maxVisualDiff > 100) {
             throw new IllegalArgumentException("maxVisualDiff should be a percentage between 0 and 100");
         }
-        if (!maxWeightIsDefined(maxWeight)){
+        if (!maxWeightIsDefined(maxWeight)) {
             maxWeight = source.length;
         }
 
@@ -50,7 +51,7 @@ public class JpegOptimizer {
     }
 
     private InternalResult getOptimizedPicture(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
-        if (!checker.isJpeg(source)){
+        if (!checker.isJpeg(source)) {
             source = compressor.writeJpg(source, MAX_JPEG_QUALITY, keepMetadata);
         }
 
