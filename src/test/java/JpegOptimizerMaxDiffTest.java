@@ -43,6 +43,18 @@ public class JpegOptimizerMaxDiffTest extends JpegOptimizerBaseTest {
         test(file, 31805, 1, -1, false);
     }
 
+    /**
+     * A picture of the sea. It's a .png file.
+     */
+    @Test
+    public void testSea() throws IOException {
+        String file = SEA;
+        test(file, 651608, 0.5, -1, true);
+        test(file, 362904, 0.5, -1, false);
+        test(file, 31805, 1, -1, true);
+        test(file, 31805, 1, -1, false);
+    }
+
     @Test
     public void optimizedPicturesCantWeightMoreThanOriginalOnes() throws IOException {
         int maxVisualDiff = 0;

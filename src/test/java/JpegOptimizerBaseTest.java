@@ -14,6 +14,8 @@ class JpegOptimizerBaseTest {
     static final String SIMCARDS = "simcards.jpg";
     static final String WEBSITE = "website.jpg";
     static final String VOLCANO = "volcano.jpg";
+    static final String SEA = "sea.png";
+    static final String COLOMBIA = "colombia.gif";
 
     private static final String OUT_DIRECTORY = "out/images/";
 
@@ -23,7 +25,7 @@ class JpegOptimizerBaseTest {
         System.out.println("Max file weight: " + ((maxWeight < 0) ? "Not set" : formatFileSize(maxWeight)));
         System.out.println("Keep metadata: " + keepMetadata);
 
-        byte[] original = new BinaryFileReader().load(picture);
+        byte[] original = getBytes(picture);
         JpegOptimizer slimmer = new JpegOptimizer();
 
         Result optimized = slimmer.optimize(original, maxVisualDiff, maxWeight, keepMetadata);
@@ -47,6 +49,10 @@ class JpegOptimizerBaseTest {
 
         assertEquals(expectedWeight, optimized.getPicture().length);
         assertTrue(original.length >= optimized.getPicture().length);
+    }
+
+    byte[] getBytes(String picture) throws IOException {
+        return new BinaryFileReader().load(picture);
     }
 
     @NotNull
