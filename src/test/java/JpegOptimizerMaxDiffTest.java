@@ -49,10 +49,22 @@ public class JpegOptimizerMaxDiffTest extends JpegOptimizerBaseTest {
     @Test
     public void testSea() throws IOException {
         String file = SEA;
-        test(file, 651608, 0.5, -1, true);
-        test(file, 362904, 0.5, -1, false);
-        test(file, 31805, 1, -1, true);
-        test(file, 31805, 1, -1, false);
+        test(file, 551861, 0.5, -1, true);
+        test(file, 219774, 0.5, -1, false);
+        test(file, 313948, 1, -1, true);
+        test(file, 120724, 1, -1, false);
+    }
+
+    /**
+     * A picture of the northern Colombia beach. It's a .gif file.
+     */
+    @Test
+    public void testColombia() throws IOException {
+        String file = COLOMBIA;
+        test(file, 437110, 0.5, -1, true);
+        test(file, 419760, 0.5, -1, false);
+        test(file, 437110, 1, -1, true);
+        test(file, 292446, 1, -1, false);
     }
 
     @Test

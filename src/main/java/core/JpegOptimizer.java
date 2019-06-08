@@ -15,10 +15,12 @@ public class JpegOptimizer {
 
     private final JpegCompressor compressor;
     private final BufferedImageComparator comparator;
+    private final JpegChecker checker;
 
     public JpegOptimizer() {
         compressor = new JpegCompressor();
         comparator = new BufferedImageComparator();
+        checker = new JpegChecker();
     }
 
     public Result optimize(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
@@ -27,6 +29,9 @@ public class JpegOptimizer {
         }
         if (maxVisualDiff < 0 || maxVisualDiff > 100) {
             throw new IllegalArgumentException("maxVisualDiff should be a percentage between 0 and 100");
+        }
+        if (!maxWeightIsDefined(maxWeight)){
+            maxWeight = source.length;
         }
 
         long start = System.currentTimeMillis();
@@ -45,6 +50,10 @@ public class JpegOptimizer {
     }
 
     private InternalResult getOptimizedPicture(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
+        if (!checker.isJpeg(source)){
+            source = compressor.writeJpg(source, MAX_JPEG_QUALITY, keepMetadata);
+        }
+
         BufferedImage sourceBufferedImage = ImageIO.read(new ByteArrayInputStream(source));
 
         int minQuality = MIN_JPEG_QUALITY;
