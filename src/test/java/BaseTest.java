@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static utils.ReadableUtils.*;
 
-class JpegOptimizerBaseTest {
+class BaseTest {
 
     static final String SIMCARDS = "simcards.jpg";
     static final String WEBSITE = "website.jpg";

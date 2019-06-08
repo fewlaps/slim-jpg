@@ -2,7 +2,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class JpegOptimizerMaxWeightTest extends JpegOptimizerBaseTest {
+public class MaxWeightTest extends BaseTest {
 
     /**
      * This picture has a very complex background.

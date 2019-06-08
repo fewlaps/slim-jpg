@@ -2,7 +2,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class JpegOptimizerMaxDiffTest extends JpegOptimizerBaseTest {
+public class MaxDiffTest extends BaseTest {
 
     public static final int IGNORE_MAX_WEIGHT = -1;
 

@@ -8,7 +8,7 @@ import java.io.IOException;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class JpegCheckerTest extends JpegOptimizerBaseTest {
+public class JpegCheckerTest extends BaseTest {
 
     private JpegChecker checker;
 
