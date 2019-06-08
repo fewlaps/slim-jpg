@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class SlimJpg {
+public class JpegOptimizer {
 
     private static final int MIN_JPEG_QUALITY = 0;
     private static final int MAX_JPEG_QUALITY = 100;
@@ -16,7 +16,7 @@ public class SlimJpg {
     private final JpegCompressor compressor;
     private final BufferedImageComparator comparator;
 
-    public SlimJpg() {
+    public JpegOptimizer() {
         compressor = new JpegCompressor();
         comparator = new BufferedImageComparator();
     }
@@ -63,11 +63,11 @@ public class SlimJpg {
 
         byte[] result;
         if (quality < MAX_JPEG_QUALITY) {
-            result = compressor.compressJpeg(source, quality, keepMetadata);
+            result = compressor.writeJpg(source, quality, keepMetadata);
         } else if (keepMetadata) {
             result = source;
         } else {
-            result = compressor.compressJpeg(source, MAX_JPEG_QUALITY, false);
+            result = compressor.writeJpg(source, MAX_JPEG_QUALITY, false);
         }
 
         return new InternalResult(
@@ -77,7 +77,7 @@ public class SlimJpg {
     }
 
     private boolean isThisQualityTooHigh(byte[] source, BufferedImage sourceBufferedImage, int quality, double maxVisualDiffPorcentage) throws IOException {
-        byte[] optimizedPicture = compressor.compressJpeg(source, quality, false);
+        byte[] optimizedPicture = compressor.writeJpg(source, quality, false);
         BufferedImage bufferedOptimizedPicture = ImageIO.read(new ByteArrayInputStream(optimizedPicture));
 
         double diff = comparator.getDifferencePercentage(sourceBufferedImage, bufferedOptimizedPicture);

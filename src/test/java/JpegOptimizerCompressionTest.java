@@ -1,5 +1,5 @@
 import core.Result;
-import core.SlimJpg;
+import core.JpegOptimizer;
 import org.junit.Test;
 
 import java.io.File;
@@ -9,28 +9,36 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static utils.ReadableUtils.*;
 
-public class OptimizerTest {
+public class JpegOptimizerCompressionTest {
 
     private static final String OUT_DIRECTORY = "out/images/";
 
+    /**
+     * This picture has a very complex background.
+     * It's a picture taken with an iPhone 6S.
+     */
     @Test
     public void testSimCards() throws IOException {
-        test("antiviaje-sim-cards.jpg", 591590, 586350);
+        test("antiviaje-sim-cards.jpg", 591590, 586350, 1);
     }
 
+    /**
+     * This picture has a flat background with some shadows. It drives to JPEG artifacts.
+     * The picture is an screenshot from the QuitNow! website.
+     */
     @Test
     public void testQuitNow() throws IOException {
-        test("download-quitnow.jpg", 31805, 31805);
+        test("download-quitnow.jpg", 31805, 31805, 1);
     }
 
-    private void test(String picture, long expectedOptimizedSizeWithMetadata, long expectedOptimizedSizeWithoutMetadata) throws IOException {
+    private void test(String picture, long expectedOptimizedSizeWithMetadata, long expectedOptimizedSizeWithoutMetadata, double maxVisualDiff) throws IOException {
         System.out.println("- Original file: " + picture);
 
         byte[] original = new BinaryFileReader().load(picture);
-        SlimJpg slimmer = new SlimJpg();
+        JpegOptimizer slimmer = new JpegOptimizer();
 
-        Result optimizedWithoutMetadata = slimmer.optimize(original, 1, false);
-        Result optimizedWithMetadata = slimmer.optimize(original, 1, true);
+        Result optimizedWithoutMetadata = slimmer.optimize(original, maxVisualDiff, false);
+        Result optimizedWithMetadata = slimmer.optimize(original, maxVisualDiff, true);
 
         System.out.println("Size: " + formatFileSize(original.length));
         System.out.println("\n- Optimization removing metadata");

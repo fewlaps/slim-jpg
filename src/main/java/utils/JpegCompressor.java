@@ -16,7 +16,7 @@ public class JpegCompressor {
 
     private static final String JPG = "jpg";
 
-    public byte[] compressJpeg(byte[] input, int quality, boolean keepMetadata) throws IOException {
+    public byte[] writeJpg(byte[] input, int quality, boolean keepMetadata) throws IOException {
         ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(input));
         Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
         ImageReader reader = readers.next();
@@ -44,7 +44,7 @@ public class JpegCompressor {
             return outputStream.toByteArray();
         } catch (Exception e) {
             dispose(reader, writer);
-            return compressJpeg(input, quality, false);
+            return writeJpg(input, quality, false);
         }
     }
 
