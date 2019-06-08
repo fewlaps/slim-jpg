@@ -73,6 +73,28 @@ A very small file: Optimizing a picture losing 1% with a 50kB max file size, kee
 You'll notice the last test used very low JPEG quality. That's because the file size was too small, so it used the highest quality that gave <50kB files.
 
 
+# Download
+
+* Gradle:
+```groovy
+repositories { jcenter() }
+    
+compile 'com.fewlaps.slimjpg:slimjpg:1.0.0'
+```
+* Maven:
+```xml
+<repository>
+  <id>jcenter</id>
+  <url>http://jcenter.bintray.com</url>
+</repository>
+
+<dependency>
+    <groupId>com.fewlaps.slimjpg</groupId>
+    <artifactId>slimjpg</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## License
 
 Copyright (c) 2019 Fewlaps (https://github.com/fewlaps) & Alex (https://github.com/collicalex)
