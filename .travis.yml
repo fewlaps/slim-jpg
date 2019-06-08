@@ -1,0 +1,16 @@
+language: java
+jdk:
+  - oraclejdk8
+
+before_install:
+  - chmod +x gradlew
+
+after_success:
+  - ./gradlew cobertura coveralls
+
+deploy:
+  - provider: script
+    script: ./gradlew bintrayUpload -PbintrayUser="${BINTRAY_USER}" -PbintrayKey="${BINTRAY_KEY}" -PdryRun=false
+    skip_cleanup: true
+    on:
+      tags: true
