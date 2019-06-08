@@ -1,5 +1,7 @@
 import core.JpegOptimizer;
 import core.Result;
+import file.BinaryFileReader;
+import file.BinaryFileWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -50,7 +52,7 @@ class JpegOptimizerBaseTest {
         picture = picture.replaceAll(".gif", "");
         picture = picture.replaceAll(".png", "");
 
-        writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata));
+        writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata, optimized.getJpegQualityUsed()));
 
         assertEquals(expectedWeight, optimized.getPicture().length);
         assertTrue(original.length >= optimized.getPicture().length);
@@ -61,11 +63,12 @@ class JpegOptimizerBaseTest {
     }
 
     @NotNull
-    private String formatFileName(String picture, double maxVisualDiff, double maxWeight, boolean keepMetadata) {
+    private String formatFileName(String picture, double maxVisualDiff, double maxWeight, boolean keepMetadata, int jpegQualityUsed) {
         return picture +
                 "-diff-" + maxVisualDiff +
                 (maxWeight < 0 ? "" : "-weight-" + maxWeight) +
                 "-metadata-" + keepMetadata +
+                "-jpegQuality-" + jpegQualityUsed +
                 ".jpg";
     }
 }
