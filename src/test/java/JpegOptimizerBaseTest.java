@@ -17,6 +17,7 @@ class JpegOptimizerBaseTest {
     static final String AVATAR = "avatar.jpg";
     static final String SEA = "sea.png";
     static final String COLOMBIA = "colombia.gif";
+    static final String CHINA = "china.bmp";
 
     private static final String OUT_DIRECTORY = "out/images/";
 

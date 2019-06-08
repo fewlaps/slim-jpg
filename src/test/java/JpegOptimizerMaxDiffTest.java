@@ -46,10 +46,11 @@ public class JpegOptimizerMaxDiffTest extends JpegOptimizerBaseTest {
     }
 
     /**
-     * A picture of the sea. It's a .png file.
+     * A picture of the sea.
+     * It's a .png file.
      */
     @Test
-    public void testSea() throws IOException {
+    public void testPngFile() throws IOException {
         String file = SEA;
         test(file, 551861, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 219774, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -58,15 +59,31 @@ public class JpegOptimizerMaxDiffTest extends JpegOptimizerBaseTest {
     }
 
     /**
-     * A picture of the northern Colombia beach. It's a .gif file.
+     * A picture of the northern Colombia beach.
+     * It's a .gif file.
      */
     @Test
-    public void testColombia() throws IOException {
+    public void testGifFile() throws IOException {
         String file = COLOMBIA;
         test(file, 437110, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 419760, 0.5, IGNORE_MAX_WEIGHT, false);
         test(file, 437110, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 292446, 1, IGNORE_MAX_WEIGHT, false);
+    }
+
+    /**
+     * This picture shows a stair in the nature.
+     * It's a .bmp file! Hello Microsoft!
+     */
+    @Test
+    public void testBmpFile() throws IOException {
+        String file = CHINA;
+        test(file, 389341, 0, IGNORE_MAX_WEIGHT, true);
+        test(file, 235193, 0, IGNORE_MAX_WEIGHT, false);
+        test(file, 389341, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 235193, 0.5, IGNORE_MAX_WEIGHT, false);
+        test(file, 235193, 1, IGNORE_MAX_WEIGHT, false);
+        test(file, 141834, 2, IGNORE_MAX_WEIGHT, false);
     }
 
     /**
