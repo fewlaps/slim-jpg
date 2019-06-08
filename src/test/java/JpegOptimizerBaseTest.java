@@ -14,6 +14,7 @@ class JpegOptimizerBaseTest {
     static final String SIMCARDS = "simcards.jpg";
     static final String WEBSITE = "website.jpg";
     static final String VOLCANO = "volcano.jpg";
+    static final String AVATAR = "avatar.jpg";
     static final String SEA = "sea.png";
     static final String COLOMBIA = "colombia.gif";
 
@@ -45,7 +46,10 @@ class JpegOptimizerBaseTest {
         writer.write(original, OUT_DIRECTORY + picture);
 
         picture = picture.replaceAll(".jpg", "");
-        writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, "optimized_keep_metadata"));
+        picture = picture.replaceAll(".gif", "");
+        picture = picture.replaceAll(".png", "");
+
+        writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata));
 
         assertEquals(expectedWeight, optimized.getPicture().length);
         assertTrue(original.length >= optimized.getPicture().length);
@@ -56,7 +60,11 @@ class JpegOptimizerBaseTest {
     }
 
     @NotNull
-    private String formatFileName(String picture, double maxVisualDiff, String type) {
-        return picture + "-" + type + "-" + maxVisualDiff + ".jpg";
+    private String formatFileName(String picture, double maxVisualDiff, double maxWeight, boolean keepMetadata) {
+        return picture +
+                "-diff-" + maxVisualDiff +
+                (maxWeight < 0 ? "" : "-weight-" + maxWeight) +
+                "-metadata-" + keepMetadata +
+                ".jpg";
     }
 }
