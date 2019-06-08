@@ -77,15 +77,21 @@ You'll notice the last test used very low JPEG quality. That's because the file 
 
 * Gradle:
 ```groovy
-repositories { jcenter() }
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'https://dl.bintray.com/fewlaps/maven'
+    }
+}
     
 compile 'com.fewlaps.slimjpg:slimjpg:1.0.0'
 ```
 * Maven:
 ```xml
 <repository>
-  <id>jcenter</id>
-  <url>http://jcenter.bintray.com</url>
+  <id>fewlaps</id>
+  <url>https://dl.bintray.com/fewlaps/maven</url>
 </repository>
 
 <dependency>
