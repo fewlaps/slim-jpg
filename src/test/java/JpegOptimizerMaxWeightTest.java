@@ -10,7 +10,7 @@ public class JpegOptimizerMaxWeightTest extends JpegOptimizerBaseTest {
      */
     @Test
     public void testSimCards() throws IOException {
-        String file = "antiviaje-sim-cards.jpg";
+        String file = SIMCARDS;
         int maxWeight = 300 * 1024;
         test(file, 305925, 0.5, maxWeight, true);
         test(file, 300705, 0.5, maxWeight, false);

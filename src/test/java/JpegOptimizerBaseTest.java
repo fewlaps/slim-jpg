@@ -9,11 +9,15 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static utils.ReadableUtils.*;
 
-public class JpegOptimizerBaseTest {
+class JpegOptimizerBaseTest {
+
+    static final String SIMCARDS = "simcards.jpg";
+    static final String WEBSITE = "website.jpg";
+    static final String VOLCANO = "volcano.jpg";
 
     private static final String OUT_DIRECTORY = "out/images/";
 
-    protected void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) throws IOException {
+    void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) throws IOException {
         System.out.println("\n------------------\n\n- Original file: " + picture);
         System.out.println("Max visual diff: " + maxVisualDiff);
         System.out.println("Max file weight: " + ((maxWeight < 0) ? "Not set" : formatFileSize(maxWeight)));
