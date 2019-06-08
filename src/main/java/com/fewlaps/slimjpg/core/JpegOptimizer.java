@@ -74,7 +74,7 @@ public class JpegOptimizer {
         byte[] result;
         if (quality < MAX_JPEG_QUALITY) {
             result = compressor.writeJpg(source, quality, keepMetadata);
-            if (maxWeightIsDefined(maxWeight) && result.length > maxWeight) {
+            if (maxWeightIsDefined(maxWeight) && result.length > maxWeight && quality > 0) {
                 quality -= 1;
                 result = compressor.writeJpg(source, quality, keepMetadata);
             }

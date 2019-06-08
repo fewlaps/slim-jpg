@@ -20,7 +20,8 @@ class BaseTest {
     static final String SEA = "sea.png";
     static final String COLOMBIA = "colombia.gif";
     static final String CHINA = "china.bmp";
-    static final String THAILAND = "thailand.jpg"; // 800x600
+    static final String THAILAND = "thailand.jpg"; // 800 x 600
+    static final String LOGOTYPE = "logotype.png"; // 1024 x 1024
 
     private static final String OUT_DIRECTORY = "out/images/";
 

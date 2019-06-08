@@ -30,7 +30,13 @@ public class JpegCompressor {
 
         ImageWriteParam writeParam = writer.getDefaultWriteParam();
         writeParam.setCompressionMode(MODE_EXPLICIT);
-        writeParam.setCompressionQuality(quality / 100f);
+
+        float appliedQuality = quality / 100f;
+        if (appliedQuality < 0) {
+            writeParam.setCompressionQuality(0);
+        } else {
+            writeParam.setCompressionQuality(appliedQuality);
+        }
 
         IIOMetadata metadata = null;
         if (keepMetadata) {
