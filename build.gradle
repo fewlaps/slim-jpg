@@ -40,7 +40,7 @@ publish {
     artifactId = 'slimjpg'
     publishVersion = project.version
     desc = 'Compress JPGs on the fly'
-    website = 'https://github.com/Fewlaps/slimjpg'
+    website = 'https://github.com/Fewlaps/slim-jpg'
 }
 
 cobertura.coverageFormats = ['html', 'xml']
