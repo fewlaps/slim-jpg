@@ -73,6 +73,11 @@ A very small file: Optimizing a picture losing 1% with a 50kB max file size, kee
 You'll notice the last test used very low JPEG quality. That's because the file size was too small, so it used the highest quality that gave <50kB files.
 
 
+## May I use it Android?
+
+Nope. SlimJpeg targets the rocky server-side guys. The library uses `javax.imageio.ImageIO` that is not included in Android. D'oh! If you try it you'll end with a `java.lang.NoClassDefFoundError: Failed resolution of: Ljavax/imageio/ImageIO;`. It was harder for me than for you...
+
+
 # Download
 
 * Gradle:
