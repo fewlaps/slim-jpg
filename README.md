@@ -82,13 +82,7 @@ Nope. SlimJpeg targets the rocky server-side guys. The library uses `javax.image
 
 * Gradle:
 ```groovy
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://dl.bintray.com/fewlaps/maven'
-    }
-}
+repositories { jcenter() }
     
 compile 'com.fewlaps.slimjpg:slimjpg:1.0.2'
 ```
