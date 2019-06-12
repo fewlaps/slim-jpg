@@ -58,19 +58,28 @@ SlimJpg.file(getBytes())
 
 Of course! These computations have been made in a MacBook PRO 13" 2015 with only two warm cores.
 
-A perfect copy: Optimizing a picture without losing anything:<br/>
-1280x1280 206.98kB picture: saved 2.51kB (1.21%), used JPEG quality 79%, took 2,381ms<br/>
-800x600 525.95kB picture: saved 301.78kB (57.38%), used JPEG quality 93%, took 2,845ms<br/>
+**A perfect copy:** Optimizing a picture without losing anything:
 
-A common optimization: Optimizing a picture losing 0.5% with a 200kB max file size, deleting the metadata:<br/>
-1280x1280 206.98kB picture: saved 11.93kB (5.76%), used JPEG quality 74%, took 1,223ms<br/>
-800x600 525.95kB picture: saved 326.76kB (62.13%), used JPEG quality 91%, took 678ms<br/>
+|Resolution|Original size|Saved|JPEG Quality %|Took|
+|:---:|:---:|:---:|:---:|:---:|
+|1280x1280|206.98kB|2.51kB (1.21%)|79%|2,381ms|
+|800x600|525.95kB|301.78kB (57.38%)|93%|2,845ms|
 
-A very small file: Optimizing a picture losing 1% with a 50kB max file size, keeping the metadata:<br/>
-1280x1280 206.98kB picture: saved 157.96kB (76.32%), used JPEG quality 10%, took 1,356ms<br/>
-800x600 525.95kB picture: saved 476.20kB (90.54%), used JPEG quality 25%, took 504ms<br/>
+**A common optimization:** Optimizing a picture losing 0.5% with a 200kB max file size, deleting the metadata:
 
-You'll notice the last test used very low JPEG quality. That's because the file size was too small, so it used the highest quality that gave <50kB files.
+|Resolution|Original size|Saved|JPEG Quality %|Took|
+|:---:|:---:|:---:|:---:|:---:|
+|1280x1280|206.98kB|11.93kB (5.76%)|74%|1,223ms|
+|800x600|525.95kB|326.76kB (62.13%)|91%|678ms|
+
+**A very small file:** Optimizing a picture losing 1% with a 50kB max file size, keeping the metadata:
+
+|Resolution|Original size|Saved|JPEG Quality %|Took|
+|:---:|:---:|:---:|:---:|:---:|
+|1280x1280|206.98kB|157.96kB (76.32%)|10%*|1,356ms|
+|800x600|525.95kB|476.20kB (90.54%)|25%*|504ms|
+
+*You'll notice the last test used very low JPEG quality. That's because the file size was too small, so it used the highest quality that gave <50kB files.
 
 
 ## May I use it Android?
