@@ -60,21 +60,21 @@ Of course! These computations have been made in a MacBook PRO 13" 2015 with only
 
 **A perfect copy:** Optimizing a picture without losing anything:
 
-|Resolution|Original size|Saved|JPEG Quality %|Took|
+|Resolution|Original size|Saved|JPEG Quality|Took|
 |:---:|:---:|:---:|:---:|:---:|
 |1280x1280|206.98kB|2.51kB (1.21%)|79%|2,381ms|
 |800x600|525.95kB|301.78kB (57.38%)|93%|2,845ms|
 
 **A common optimization:** Optimizing a picture losing 0.5% with a 200kB max file size, deleting the metadata:
 
-|Resolution|Original size|Saved|JPEG Quality %|Took|
+|Resolution|Original size|Saved|JPEG Quality|Took|
 |:---:|:---:|:---:|:---:|:---:|
 |1280x1280|206.98kB|11.93kB (5.76%)|74%|1,223ms|
 |800x600|525.95kB|326.76kB (62.13%)|91%|678ms|
 
 **A very small file:** Optimizing a picture losing 1% with a 50kB max file size, keeping the metadata:
 
-|Resolution|Original size|Saved|JPEG Quality %|Took|
+|Resolution|Original size|Saved|JPEG Quality|Took|
 |:---:|:---:|:---:|:---:|:---:|
 |1280x1280|206.98kB|157.96kB (76.32%)|10%*|1,356ms|
 |800x600|525.95kB|476.20kB (90.54%)|25%*|504ms|
