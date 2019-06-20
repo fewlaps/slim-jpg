@@ -104,10 +104,13 @@ public class JpegOptimizer {
 
         BufferedImage bufferedOptimizedPicture = ImageIO.read(new ByteArrayInputStream(optimizedPicture));
 
-        double diff = comparator.getDifferencePercentage(sourceBufferedImage, bufferedOptimizedPicture);
-        diff *= 100.;
-
-        return diff < maxVisualDiffPorcentage;
+        if (maxVisualDiffPorcentage == 0.0) {
+            return comparator.isSameContent(sourceBufferedImage, bufferedOptimizedPicture);
+        } else {
+            double diff = comparator.getDifferencePercentage(sourceBufferedImage, bufferedOptimizedPicture);
+            diff *= 100.;
+            return diff < maxVisualDiffPorcentage;
+        }
     }
 
     private boolean maxWeightIsDefined(long maxWeight) {

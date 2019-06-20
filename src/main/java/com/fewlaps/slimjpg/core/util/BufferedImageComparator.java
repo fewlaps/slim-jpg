@@ -68,4 +68,41 @@ public class BufferedImageComparator {
 
         return diffPercent;
     }
+
+    public boolean isSameContent(BufferedImage img1, BufferedImage img2) throws IOException {
+        int width1 = img1.getWidth(null);
+        int width2 = img2.getWidth(null);
+        int height1 = img1.getHeight(null);
+        int height2 = img2.getHeight(null);
+
+        if ((width1 != width2) || (height1 != height2)) {
+            throw new IOException("Images have different sizes");
+        }
+
+        DataBuffer db1 = img1.getRaster().getDataBuffer();
+        DataBuffer db2 = img2.getRaster().getDataBuffer();
+
+        int size = db1.getSize(); //size = width * height * 3
+
+        if (size == (width1 * height1 * 3)) { //RGB 24bit per pixel - 3 bytes per pixel: 1 for R, 1 for G, 1 for B
+            for (int i = 0; i < size; i += 3) {
+                if (db2.getElem(i) != db1.getElem(i) ||
+                        db2.getElem(i + 1) != db1.getElem(i + 1) ||
+                        db2.getElem(i + 2) != db1.getElem(i + 2)) {
+                    return false;
+                }
+            }
+            return true;
+
+        } else if (size == (width1 * height1)) { // Gray 8bit per pixel - Don't know if it's possible in jpeg, but just in case, code it! :)
+            for (int i = 0; i < size; ++i) {
+                if (db2.getElem(i) != db1.getElem(i)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return true;
+        }
+    }
 }
