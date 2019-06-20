@@ -18,14 +18,10 @@ public class BufferedImageComparator {
      */
 
     public double getDifferencePercentage(BufferedImage img1, BufferedImage img2) throws IOException {
-        int width1 = img1.getWidth(null);
-        int width2 = img2.getWidth(null);
-        int height1 = img1.getHeight(null);
-        int height2 = img2.getHeight(null);
+        checkSameSize(img1, img2);
 
-        if ((width1 != width2) || (height1 != height2)) {
-            throw new IOException("Images have different sizes");
-        }
+        int width = img1.getWidth(null);
+        int height = img1.getHeight(null);
 
         DataBuffer db1 = img1.getRaster().getDataBuffer();
         DataBuffer db2 = img2.getRaster().getDataBuffer();
@@ -36,7 +32,7 @@ public class BufferedImageComparator {
 
         //TODO: jpeg format v9 can use 12bit per channel, see: http://www.tomshardware.fr/articles/jpeg-lossless-12bit,1-46742.html
 
-        if (size == (width1 * height1 * 3)) { //RGB 24bit per pixel - 3 bytes per pixel: 1 for R, 1 for G, 1 for B
+        if (size == (width * height * 3)) { //RGB 24bit per pixel - 3 bytes per pixel: 1 for R, 1 for G, 1 for B
 
             for (int i = 0; i < size; i += 3) {
 		    	/*
@@ -55,10 +51,10 @@ public class BufferedImageComparator {
             }
 
             double maxPixDiff = Math.sqrt(3); // max diff per color component is 1. So max diff on the 3 RGB component is 1+1+1.
-            double n = width1 * height1;
+            double n = width * height;
             diffPercent = diff / (n * maxPixDiff);
 
-        } else if (size == (width1 * height1)) { // Gray 8bit per pixel - Don't know if it's possible in jpeg, but just in case, code it! :)
+        } else if (size == (width * height)) { // Gray 8bit per pixel - Don't know if it's possible in jpeg, but just in case, code it! :)
 
             for (int i = 0; i < size; ++i) {
                 diff += (db2.getElem(i) - db1.getElem(i)) / 255;
@@ -70,6 +66,22 @@ public class BufferedImageComparator {
     }
 
     public boolean isSameContent(BufferedImage img1, BufferedImage img2) throws IOException {
+        checkSameSize(img1, img2);
+
+        DataBuffer db1 = img1.getRaster().getDataBuffer();
+        DataBuffer db2 = img2.getRaster().getDataBuffer();
+
+        int size = db1.getSize();
+
+        for (int i = 0; i < size; ++i) {
+            if (db2.getElem(i) != db1.getElem(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkSameSize(BufferedImage img1, BufferedImage img2) throws IOException {
         int width1 = img1.getWidth(null);
         int width2 = img2.getWidth(null);
         int height1 = img1.getHeight(null);
@@ -77,32 +89,6 @@ public class BufferedImageComparator {
 
         if ((width1 != width2) || (height1 != height2)) {
             throw new IOException("Images have different sizes");
-        }
-
-        DataBuffer db1 = img1.getRaster().getDataBuffer();
-        DataBuffer db2 = img2.getRaster().getDataBuffer();
-
-        int size = db1.getSize(); //size = width * height * 3
-
-        if (size == (width1 * height1 * 3)) { //RGB 24bit per pixel - 3 bytes per pixel: 1 for R, 1 for G, 1 for B
-            for (int i = 0; i < size; i += 3) {
-                if (db2.getElem(i) != db1.getElem(i) ||
-                        db2.getElem(i + 1) != db1.getElem(i + 1) ||
-                        db2.getElem(i + 2) != db1.getElem(i + 2)) {
-                    return false;
-                }
-            }
-            return true;
-
-        } else if (size == (width1 * height1)) { // Gray 8bit per pixel - Don't know if it's possible in jpeg, but just in case, code it! :)
-            for (int i = 0; i < size; ++i) {
-                if (db2.getElem(i) != db1.getElem(i)) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return true;
         }
     }
 }
