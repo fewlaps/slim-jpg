@@ -86,6 +86,12 @@ public class MaxDiffTest extends BaseTest {
         test(file, 141834, 2, IGNORE_MAX_WEIGHT, false);
     }
 
+    @Test
+    public void testLosslessOptimizations() throws IOException {
+        test(CHINA, 389341, 0, IGNORE_MAX_WEIGHT, true);
+        test(AVATAR, 209589, 0, IGNORE_MAX_WEIGHT, true);
+    }
+
     /**
      * This picture is a real avatar used by a happy developer
      * It's a picture without metadata.
