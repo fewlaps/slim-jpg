@@ -10,7 +10,7 @@ public class JpegCompressorTest extends BaseTest {
     private static final String OUT_DIRECTORY = "out/jpeg-qualities/";
 
     @Test
-    public void useAllJpegQualities() throws IOException {
+    public void useAllJpegQualities() {
         JpegCompressor compressor = new JpegCompressor();
         byte[] image = getBytes(AVATAR);
 
@@ -19,14 +19,18 @@ public class JpegCompressorTest extends BaseTest {
         BinaryFileWriter writer = new BinaryFileWriter();
 
         for (int quality = 0; quality <= 100; quality++) {
-            long start = System.currentTimeMillis();
+            try {
+                long start = System.currentTimeMillis();
 
-            byte[] result = compressor.writeJpg(image, quality, false);
+                byte[] result = compressor.writeJpg(image, quality, false);
 
-            long time = System.currentTimeMillis() - start;
-            System.out.println("Compressing image in quality " + quality + " took " + time + "ms");
+                long time = System.currentTimeMillis() - start;
+                System.out.println("Compressing image in quality " + quality + " took " + time + "ms");
 
-            writer.write(result, OUT_DIRECTORY + "quality-" + quality + ".jpg");
+                writer.write(result, OUT_DIRECTORY + "quality-" + quality + ".jpg");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

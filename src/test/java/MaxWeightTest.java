@@ -9,7 +9,7 @@ public class MaxWeightTest extends BaseTest {
      * It's a picture taken with an iPhone 6S.
      */
     @Test
-    public void testSimCards() throws IOException {
+    public void testSimCards() {
         String file = SIMCARDS;
         int maxWeight = 300 * 1024;
         test(file, 305925, 0.5, maxWeight, true);
@@ -23,7 +23,7 @@ public class MaxWeightTest extends BaseTest {
      * It's a picture without metadata.
      */
     @Test
-    public void testAvatar() throws IOException {
+    public void testAvatar() {
         String file = AVATAR;
         int maxWeight = 100 * 1024;
         test(file, 101451, 0.5, maxWeight, true);

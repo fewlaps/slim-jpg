@@ -1,17 +1,15 @@
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class MaxDiffTest extends BaseTest {
 
-    public static final int IGNORE_MAX_WEIGHT = -1;
+    private static final int IGNORE_MAX_WEIGHT = -1;
 
     /**
      * This picture has a very complex background.
      * It's a picture taken with an iPhone 6S.
      */
     @Test
-    public void testSimCards() throws IOException {
+    public void testSimCards() {
         String file = SIMCARDS;
         test(file, 1411471, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 1406130, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -24,7 +22,7 @@ public class MaxDiffTest extends BaseTest {
      * The picture doesn't have any metadata.
      */
     @Test
-    public void testEthiopiaVolcano() throws IOException {
+    public void testEthiopiaVolcano() {
         String file = VOLCANO;
         test(file, 776229, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 770116, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -37,7 +35,7 @@ public class MaxDiffTest extends BaseTest {
      * The picture doesn't have any metadata.
      */
     @Test
-    public void testQuitNow() throws IOException {
+    public void testQuitNow() {
         String file = WEBSITE;
         test(file, 59115, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 59115, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -50,7 +48,7 @@ public class MaxDiffTest extends BaseTest {
      * It's a .png file.
      */
     @Test
-    public void testPngFile() throws IOException {
+    public void testPngFile() {
         String file = SEA;
         test(file, 551861, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 219774, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -63,7 +61,7 @@ public class MaxDiffTest extends BaseTest {
      * It's a .gif file.
      */
     @Test
-    public void testGifFile() throws IOException {
+    public void testGifFile() {
         String file = COLOMBIA;
         test(file, 437110, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 419760, 0.5, IGNORE_MAX_WEIGHT, false);
@@ -76,7 +74,7 @@ public class MaxDiffTest extends BaseTest {
      * It's a .bmp file! Hello Microsoft!
      */
     @Test
-    public void testBmpFile() throws IOException {
+    public void testBmpFile() {
         String file = CHINA;
         test(file, 389341, 0, IGNORE_MAX_WEIGHT, true);
         test(file, 235193, 0, IGNORE_MAX_WEIGHT, false);
@@ -87,7 +85,7 @@ public class MaxDiffTest extends BaseTest {
     }
 
     @Test
-    public void testLosslessOptimizations() throws IOException {
+    public void testLosslessOptimizations() {
         test(CHINA, 389341, 0, IGNORE_MAX_WEIGHT, true);
         test(AVATAR, 209589, 0, IGNORE_MAX_WEIGHT, true);
     }
@@ -97,7 +95,7 @@ public class MaxDiffTest extends BaseTest {
      * It's a picture without metadata.
      */
     @Test
-    public void testAvatar() throws IOException {
+    public void testAvatar() {
         String file = AVATAR;
         test(file, 209589, 0, IGNORE_MAX_WEIGHT, true);
 
@@ -112,7 +110,7 @@ public class MaxDiffTest extends BaseTest {
     }
 
     @Test
-    public void optimizedPicturesCantWeightMoreThanOriginalOnes() throws IOException {
+    public void optimizedPicturesCantWeightMoreThanOriginalOnes() {
         int maxVisualDiff = 0;
         test(SIMCARDS, 1966607, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
         test(SIMCARDS, 2015729, maxVisualDiff, IGNORE_MAX_WEIGHT, false);

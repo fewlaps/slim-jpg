@@ -25,39 +25,43 @@ class BaseTest {
 
     private static final String OUT_DIRECTORY = "out/images/";
 
-    void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) throws IOException {
-        System.out.println("\n------------------\n\n- Original file: " + picture);
-        System.out.println("Max visual diff: " + maxVisualDiff);
-        System.out.println("Max file weight: " + ((maxWeight < 0) ? "Not set" : formatFileSize(maxWeight)));
-        System.out.println("Keep metadata: " + keepMetadata);
+    void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) {
+        try {
+            System.out.println("\n------------------\n\n- Original file: " + picture);
+            System.out.println("Max visual diff: " + maxVisualDiff);
+            System.out.println("Max file weight: " + ((maxWeight < 0) ? "Not set" : formatFileSize(maxWeight)));
+            System.out.println("Keep metadata: " + keepMetadata);
 
-        byte[] original = getBytes(picture);
-        JpegOptimizer slimmer = new JpegOptimizer();
+            byte[] original = getBytes(picture);
+            JpegOptimizer slimmer = new JpegOptimizer();
 
-        Result optimized = slimmer.optimize(original, maxVisualDiff, maxWeight, keepMetadata);
+            Result optimized = slimmer.optimize(original, maxVisualDiff, maxWeight, keepMetadata);
 
-        System.out.println("Size: " + formatFileSize(original.length));
-        System.out.println("\n- Optimization results:");
-        System.out.println("Size: " + formatFileSize((optimized.getPicture().length)));
-        System.out.println("Saved size: " + formatFileSize((optimized.getSavedBytes())));
-        System.out.println("Saved ratio: " + formatPercentage(optimized.getSavedRatio()));
-        System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
-        System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
+            System.out.println("Size: " + formatFileSize(original.length));
+            System.out.println("\n- Optimization results:");
+            System.out.println("Size: " + formatFileSize((optimized.getPicture().length)));
+            System.out.println("Saved size: " + formatFileSize((optimized.getSavedBytes())));
+            System.out.println("Saved ratio: " + formatPercentage(optimized.getSavedRatio()));
+            System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
+            System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
 
-        File directory = new File(OUT_DIRECTORY);
-        directory.mkdirs();
-        BinaryFileWriter writer = new BinaryFileWriter();
+            File directory = new File(OUT_DIRECTORY);
+            directory.mkdirs();
+            BinaryFileWriter writer = new BinaryFileWriter();
 
-        writer.write(original, OUT_DIRECTORY + picture);
+            writer.write(original, OUT_DIRECTORY + picture);
 
-        picture = picture.replaceAll(".jpg", "");
-        picture = picture.replaceAll(".gif", "");
-        picture = picture.replaceAll(".png", "");
+            picture = picture.replaceAll(".jpg", "");
+            picture = picture.replaceAll(".gif", "");
+            picture = picture.replaceAll(".png", "");
 
-        writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata, optimized.getJpegQualityUsed()));
+            writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata, optimized.getJpegQualityUsed()));
 
-        assertEquals(expectedWeight, optimized.getPicture().length);
-        assertTrue(original.length >= optimized.getPicture().length);
+            assertEquals(expectedWeight, optimized.getPicture().length);
+            assertTrue(original.length >= optimized.getPicture().length);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     byte[] getBytes(String picture) {
