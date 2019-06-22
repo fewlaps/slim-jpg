@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
+import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 
 class BaseTest {
 
@@ -60,8 +60,12 @@ class BaseTest {
         assertTrue(original.length >= optimized.getPicture().length);
     }
 
-    byte[] getBytes(String picture) throws IOException {
-        return new BinaryFileReader().load(picture);
+    byte[] getBytes(String picture) {
+        try {
+            return new BinaryFileReader().load(picture);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @NotNull

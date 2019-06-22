@@ -4,7 +4,8 @@ import com.fewlaps.slimjpg.core.Result;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertFalse;
 public class PublicApiTest extends BaseTest {
 
     @Test
-    public void minimalCall_avatar() throws IOException {
+    public void minimalCall_avatar() {
         byte[] file = getAvatar();
         Result result = SlimJpg.file(file)
                 .optimize();
@@ -24,7 +25,7 @@ public class PublicApiTest extends BaseTest {
     }
 
     @Test
-    public void minimalCall_thailand() throws IOException {
+    public void minimalCall_thailand() {
         byte[] file = getThailand();
         Result result = SlimJpg.file(file)
                 .optimize();
@@ -32,8 +33,9 @@ public class PublicApiTest extends BaseTest {
         System.out.println("- Thailand minimal call");
         printOptimizationResult(file, result);
     }
+
     @Test
-    public void commonCall_avatar() throws IOException {
+    public void commonCall_avatar() {
         byte[] file = getAvatar();
         Result result = SlimJpg.file(file)
                 .maxVisualDiff(0.5)
@@ -46,7 +48,7 @@ public class PublicApiTest extends BaseTest {
     }
 
     @Test
-    public void commonCall_thailand() throws IOException {
+    public void commonCall_thailand() {
         byte[] file = getThailand();
         Result result = SlimJpg.file(file)
                 .maxVisualDiff(0.5)
@@ -59,7 +61,7 @@ public class PublicApiTest extends BaseTest {
     }
 
     @Test
-    public void aggressiveCall_avatar() throws IOException {
+    public void aggressiveCall_avatar() {
         byte[] file = getAvatar();
         Result result = SlimJpg.file(file)
                 .maxVisualDiff(1)
@@ -72,7 +74,7 @@ public class PublicApiTest extends BaseTest {
     }
 
     @Test
-    public void aggressiveCall_thailand() throws IOException {
+    public void aggressiveCall_thailand() {
         byte[] file = getThailand();
         Result result = SlimJpg.file(file)
                 .maxVisualDiff(1)
@@ -85,42 +87,50 @@ public class PublicApiTest extends BaseTest {
     }
 
     @Test
-    public void byDefault_maxVisualDiff_isMaximum() throws IOException {
+    public void byDefault_maxVisualDiff_isMaximum() {
         RequestCreator request = SlimJpg.file(getAvatar());
         double maxVisualDiff = request.getMaxVisualDiff();
         assertEquals(0.0, maxVisualDiff, 0.1);
     }
 
     @Test
-    public void byDefault_maxFileWeight_isNotApplied() throws IOException {
+    public void byDefault_maxFileWeight_isNotApplied() {
         RequestCreator request = SlimJpg.file(getAvatar());
         long maxFileWeight = request.getMaxFileWeight();
         assertEquals(-1, maxFileWeight);
     }
 
     @Test
-    public void byDefault_metadata_isDeleted() throws IOException {
+    public void byDefault_metadata_isDeleted() {
         RequestCreator request = SlimJpg.file(getAvatar());
         boolean keepMetadata = request.getKeepMetadata();
         assertFalse(keepMetadata);
     }
 
     @Test
-    public void inputCanBeAInputStream() throws IOException {
+    public void inputCanBeAInputStream() {
         byte[] file = getAvatar();
         InputStream inputStream = new ByteArrayInputStream(file);
-        Result result = SlimJpg.file(inputStream)
-                .optimize();
-
-        System.out.println("- Input as a InputStream");
-        printOptimizationResult(file, result);
+        SlimJpg.file(inputStream).optimize();
     }
 
-    private byte[] getAvatar() throws IOException {
+    @Test
+    public void inputCanBeAFile() {
+        File input = new File("src/test/resources/avatar.jpg");
+        SlimJpg.file(input).optimize();
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void expectFileNotFoundException_forUnknownFiles() {
+        File input = new File("badpath.jpg");
+        SlimJpg.file(input).optimize();
+    }
+
+    private byte[] getAvatar() {
         return getBytes(AVATAR);
     }
 
-    private byte[] getThailand() throws IOException {
+    private byte[] getThailand() {
         return getBytes(THAILAND);
     }
 
