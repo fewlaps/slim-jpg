@@ -21,32 +21,33 @@ Are you concerned about your user's privacy? SlimJPG can keep the metadata or de
 ## Ok, show me the code
 
 ```java
-// Optimize your picture without losing anything
-SlimJpg.file(yourPictureBytes)
-                .optimize();
+// A lossless optimization of your image
+SlimJpg.file(byteArray).optimize();
+SlimJpg.file(inputStream).optimize();
+SlimJpg.file(file).optimize();
 
-// Optimize your picture with losing a 0.5% of visual quality
-SlimJpg.file(yourPictureBytes)
+// Optimize your picture with a 0.5% of maximum visual loss
+SlimJpg.file(picture)
                 .maxVisualDiff(0.5)
                 .optimize();
 
 // Optimize your picture to fit a 50kB file
-SlimJpg.file(yourPictureBytes)
+SlimJpg.file(picture)
                 .maxFileWeightInKB(50)
                 .optimize();
 
-// Optimize your picture deleting the metadata
-SlimJpg.file(yourPictureBytes)
+// A lossless optimization deleting the metadata
+SlimJpg.file(picture)
                 .deleteMetadata()
                 .optimize();
 
-// Optimize your picture keeping the metadata
-SlimJpg.file(yourPictureBytes)
+// A lossless optimization keeping the metadata
+SlimJpg.file(picture)
                 .keepMetadata()
                 .optimize();
 
-// Use the whole criteria
-SlimJpg.file(getBytes())
+// Use the whole criteria the API offers
+SlimJpg.file(picture)
                 .maxVisualDiff(0.5)
                 .maxFileWeightInKB(50)
                 .deleteMetadata()
