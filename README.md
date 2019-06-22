@@ -93,7 +93,7 @@ Nope. SlimJpeg targets the rocky server-side guys. The library uses `javax.image
 ```groovy
 repositories { jcenter() }
     
-compile 'com.fewlaps.slimjpg:slimjpg:1.0.2'
+compile 'com.fewlaps.slimjpg:slimjpg:1.1.0'
 ```
 * Maven:
 ```xml
@@ -105,7 +105,7 @@ compile 'com.fewlaps.slimjpg:slimjpg:1.0.2'
 <dependency>
     <groupId>com.fewlaps.slimjpg</groupId>
     <artifactId>slimjpg</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
