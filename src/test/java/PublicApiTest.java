@@ -3,7 +3,9 @@ import com.fewlaps.slimjpg.SlimJpg;
 import com.fewlaps.slimjpg.core.Result;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 import static org.junit.Assert.assertEquals;
@@ -101,6 +103,17 @@ public class PublicApiTest extends BaseTest {
         RequestCreator request = SlimJpg.file(getAvatar());
         boolean keepMetadata = request.getKeepMetadata();
         assertFalse(keepMetadata);
+    }
+
+    @Test
+    public void inputCanBeAInputStream() throws IOException {
+        byte[] file = getAvatar();
+        InputStream inputStream = new ByteArrayInputStream(file);
+        Result result = SlimJpg.file(inputStream)
+                .optimize();
+
+        System.out.println("- Input as a InputStream");
+        printOptimizationResult(file, result);
     }
 
     private byte[] getAvatar() throws IOException {
