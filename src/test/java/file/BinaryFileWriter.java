@@ -1,12 +1,12 @@
 package file;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 public class BinaryFileWriter {
     public void write(byte[] input, String filePath) throws IOException {
+        File directory = new File(filePath).getParentFile();
+        directory.mkdirs();
+
         try (OutputStream output = new BufferedOutputStream(new FileOutputStream(filePath))) {
             output.write(input);
         }

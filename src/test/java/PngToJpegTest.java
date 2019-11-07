@@ -37,8 +37,6 @@ public class PngToJpegTest extends BaseTest {
     }
 
     private void writeFiles(byte[] original, String name, byte[] optimized, String metadata, int quality) {
-        File directory = new File(OUT_DIRECTORY);
-        directory.mkdirs();
         BinaryFileWriter writer = new BinaryFileWriter();
 
         try {

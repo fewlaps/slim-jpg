@@ -14,8 +14,6 @@ public class JpegCompressorTest extends BaseTest {
         JpegCompressor compressor = new JpegCompressor();
         byte[] image = getBytes(AVATAR);
 
-        File directory = new File(OUT_DIRECTORY);
-        directory.mkdirs();
         BinaryFileWriter writer = new BinaryFileWriter();
 
         for (int quality = 0; quality <= 100; quality++) {

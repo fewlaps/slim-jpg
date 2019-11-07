@@ -45,8 +45,6 @@ class BaseTest {
             System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
             System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
 
-            File directory = new File(OUT_DIRECTORY);
-            directory.mkdirs();
             BinaryFileWriter writer = new BinaryFileWriter();
 
             writer.write(original, OUT_DIRECTORY + picture);
