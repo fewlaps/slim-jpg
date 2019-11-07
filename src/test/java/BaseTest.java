@@ -1,10 +1,13 @@
 import com.fewlaps.slimjpg.core.JpegOptimizer;
 import com.fewlaps.slimjpg.core.Result;
+import com.fewlaps.slimjpg.core.util.BufferedImageComparator;
 import file.BinaryFileReader;
 import file.BinaryFileWriter;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
@@ -27,7 +30,8 @@ class BaseTest {
 
     void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) {
         try {
-            System.out.println("\n------------------\n\n- Original file: " + picture);
+            System.out.println("\n------------------\n\n- Request: ");
+            System.out.println("Filename: " + picture);
             System.out.println("Max visual diff: " + maxVisualDiff);
             System.out.println("Max file weight: " + ((maxWeight < 0) ? "Not set" : formatFileSize(maxWeight)));
             System.out.println("Keep metadata: " + keepMetadata);
@@ -37,13 +41,7 @@ class BaseTest {
 
             Result optimized = slimmer.optimize(original, maxVisualDiff, maxWeight, keepMetadata);
 
-            System.out.println("Size: " + formatFileSize(original.length));
-            System.out.println("\n- Optimization results:");
-            System.out.println("Size: " + formatFileSize((optimized.getPicture().length)));
-            System.out.println("Saved size: " + formatFileSize((optimized.getSavedBytes())));
-            System.out.println("Saved ratio: " + formatPercentage(optimized.getSavedRatio()));
-            System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
-            System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
+            printCompressionResult(original, optimized);
 
             BinaryFileWriter writer = new BinaryFileWriter();
 
@@ -56,9 +54,36 @@ class BaseTest {
             writer.write(optimized.getPicture(), OUT_DIRECTORY + formatFileName(picture, maxVisualDiff, maxWeight, keepMetadata, optimized.getJpegQualityUsed()));
 
             assertEquals(expectedWeight, optimized.getPicture().length);
-            assertTrue(original.length >= optimized.getPicture().length);
+
+            if (optimized.getJpegQualityUsed() < 100 && keepMetadata) {
+                BufferedImageComparator comparator = new BufferedImageComparator();
+                BufferedImage originalBI = ImageIO.read(new ByteArrayInputStream(original));
+                BufferedImage optimizedBI = ImageIO.read(new ByteArrayInputStream(optimized.getPicture()));
+                double difference = comparator.getDifferencePercentage(originalBI, optimizedBI);
+                assertTrue(difference < maxVisualDiff);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    protected void printCompressionResult(byte[] original, Result optimized) {
+        System.out.println("\n- Original file:");
+        System.out.println("Size: " + formatFileSize(original.length));
+        System.out.println("\n- Optimization results:");
+        System.out.println("Size: " + formatFileSize((optimized.getPicture().length)));
+        System.out.println("Saved size: " + formatFileSize((optimized.getSavedBytes())));
+        System.out.println("Saved ratio: " + formatPercentage(optimized.getSavedRatio()));
+        System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
+        System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
+
+        try {
+            BufferedImageComparator comparator = new BufferedImageComparator();
+            BufferedImage originalBI = ImageIO.read(new ByteArrayInputStream(original));
+            BufferedImage optimizedBI = ImageIO.read(new ByteArrayInputStream(optimized.getPicture()));
+            System.out.println("Difference: " + comparator.getDifferencePercentage(originalBI, optimizedBI));
+        } catch (Exception ignored) {
         }
     }
 
@@ -78,5 +103,9 @@ class BaseTest {
                 "-metadata-" + keepMetadata +
                 "-jpegQuality-" + jpegQualityUsed +
                 ".jpg";
+    }
+
+    protected int getWeight(String file) {
+        return getBytes(file).length;
     }
 }

@@ -21,7 +21,7 @@ public class PngToJpegTest extends BaseTest {
 
         writeFiles(original, LOGOTYPE, optimized.getPicture(), "without-metadata", optimized.getJpegQualityUsed());
 
-        assertEquals(0, optimized.getJpegQualityUsed());
+        assertEquals(100, optimized.getJpegQualityUsed());
     }
 
     @Test
@@ -33,7 +33,7 @@ public class PngToJpegTest extends BaseTest {
 
         writeFiles(original, LOGOTYPE, optimized.getPicture(), "with-metadata", optimized.getJpegQualityUsed());
 
-        assertEquals(0, optimized.getJpegQualityUsed());
+        assertEquals(100, optimized.getJpegQualityUsed());
     }
 
     private void writeFiles(byte[] original, String name, byte[] optimized, String metadata, int quality) {

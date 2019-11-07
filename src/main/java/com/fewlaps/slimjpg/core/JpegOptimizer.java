@@ -31,9 +31,9 @@ public class JpegOptimizer {
         if (maxVisualDiff < 0 || maxVisualDiff > 100) {
             throw new IllegalArgumentException("maxVisualDiff should be a percentage between 0 and 100");
         }
-        if (!maxWeightIsDefined(maxWeight)) {
-            maxWeight = source.length;
-        }
+//        if (!maxWeightIsDefined(maxWeight)) {
+//            maxWeight = source.length;
+//        }
 
         long start = System.currentTimeMillis();
         InternalResult optimizedPicture = getOptimizedPicture(source, maxVisualDiff, maxWeight, keepMetadata);
@@ -72,22 +72,18 @@ public class JpegOptimizer {
         }
 
         byte[] result;
-        if (quality < MAX_JPEG_QUALITY) {
+        if (quality < MAX_JPEG_QUALITY || !keepMetadata) {
             result = compressor.writeJpg(source, quality, keepMetadata);
             if (maxWeightIsDefined(maxWeight) && result.length > maxWeight && quality > 0) {
                 quality -= 1;
                 result = compressor.writeJpg(source, quality, keepMetadata);
             }
-            if (result.length > source.length) {
+            if (result.length > source.length && keepMetadata) {
                 result = source;
                 quality = MAX_JPEG_QUALITY;
             }
-        } else if (keepMetadata) {
-            result = source;
         } else {
-            InternalResult optimizedPictureWithoutMetadata = getOptimizedPicture(source, maxVisualDiff + 0.5, maxWeight, false);
-            result = optimizedPictureWithoutMetadata.getPicture();
-            quality = optimizedPictureWithoutMetadata.getJpegQualityUsed();
+            result = source;
         }
 
         return new InternalResult(
