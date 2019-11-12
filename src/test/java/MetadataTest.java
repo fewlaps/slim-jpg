@@ -1,14 +1,30 @@
 import com.fewlaps.slimjpg.core.JpegOptimizer;
 import metadata.MetadataDisplayer;
+import metadata.MetadataParser;
 import metadata.MetadataReader;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.imageio.metadata.IIOMetadata;
 import java.io.IOException;
 
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 public class MetadataTest extends BaseTest {
 
     private static final int IGNORE_MAX_WEIGHT = -1;
+    public static final String UNKNOWN_MARKER = "unknown";
+    public static final String ADOBE_MARKER = "app14Adobe";
+
+    MetadataDisplayer metadataDisplayer;
+    MetadataParser metadataParser;
+
+    @Before
+    public void setUp() {
+        metadataDisplayer = new MetadataDisplayer();
+        metadataParser = new MetadataParser();
+    }
 
     @Test
     public void losslessOptimizations_inJpegsWithICCProfile_keepingMetadata_shouldKeepTheMetadata() throws IOException {
@@ -71,10 +87,16 @@ public class MetadataTest extends BaseTest {
         IIOMetadata originalMetadata = metadataReader.getMetadata(original);
         IIOMetadata optimizedMetadata = metadataReader.getMetadata(optimized);
 
-        new MetadataDisplayer().displayMetadata(originalMetadata);
-        new MetadataDisplayer().displayMetadata(optimizedMetadata);
+        metadataDisplayer.displayMetadata("Original", originalMetadata);
+        metadataDisplayer.displayMetadata("Optimized", optimizedMetadata);
 
-        //TODO compare the Metadata to assert that they're the same
+        int unknownMarkersInOriginal = metadataParser.countMarkersByName(originalMetadata, UNKNOWN_MARKER);
+        int unknownMarkersInOptimized = metadataParser.countMarkersByName(optimizedMetadata, UNKNOWN_MARKER);
+        int adobeMarkersInOriginal = metadataParser.countMarkersByName(originalMetadata, ADOBE_MARKER);
+        int adobeMarkersInOptimized = metadataParser.countMarkersByName(optimizedMetadata, ADOBE_MARKER);
+
+        assertEquals(unknownMarkersInOriginal, unknownMarkersInOptimized);
+        assertEquals(adobeMarkersInOriginal, adobeMarkersInOptimized);
     }
 
     private void assertNoMetadata(byte[] original, byte[] optimized) {
@@ -82,9 +104,14 @@ public class MetadataTest extends BaseTest {
         IIOMetadata originalMetadata = metadataReader.getMetadata(original);
         IIOMetadata optimizedMetadata = metadataReader.getMetadata(optimized);
 
-        new MetadataDisplayer().displayMetadata(originalMetadata);
-        new MetadataDisplayer().displayMetadata(optimizedMetadata);
+        metadataDisplayer.displayMetadata("Original", originalMetadata);
+        metadataDisplayer.displayMetadata("Optimized", optimizedMetadata);
 
-        //TODO compare the Metadata to assert that they're not the same
+        int countUnknownMarkersInOriginal = metadataParser.countMarkersByName(originalMetadata, UNKNOWN_MARKER);
+        int countUnknownMarkersInOptimized = metadataParser.countMarkersByName(optimizedMetadata, UNKNOWN_MARKER);
+        int adobeMarkersInOptimized = metadataParser.countMarkersByName(optimizedMetadata, ADOBE_MARKER);
+
+        assertNotEquals(countUnknownMarkersInOriginal, countUnknownMarkersInOptimized);
+        assertEquals(0, adobeMarkersInOptimized);
     }
 }

@@ -6,19 +6,22 @@ import org.w3c.dom.Node;
 import javax.imageio.metadata.IIOMetadata;
 
 /**
- * This class is based in http://johnbokma.com/java/obtaining-image-metadata.html,
+ * This class is almost a copy of http://johnbokma.com/java/obtaining-image-metadata.html,
  * that is based in https://docs.oracle.com/javase/1.5.0/docs/guide/imageio/spec/apps.fm5.html
  * <p>
  * Thanks for it, John! And well, good job, Oracle. Tell Sun guys I said hi.
  */
 public class MetadataDisplayer {
 
-    public void displayMetadata(IIOMetadata metadata) {
+    public void displayMetadata(String title, IIOMetadata metadata) {
+        System.out.println("\n-----------");
+        System.out.println(title.toUpperCase());
+        System.out.println("-----------\n");
+
         String[] names = metadata.getMetadataFormatNames();
-        int length = names.length;
-        for (int i = 0; i < length; i++) {
-            System.out.println("Format name: " + names[i]);
-            displayMetadata(metadata.getAsTree(names[i]));
+        for (String name : names) {
+            System.out.println("Format name: " + name);
+            displayMetadata(metadata.getAsTree(name));
         }
     }
 
