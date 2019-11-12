@@ -19,12 +19,14 @@ class BaseTest {
     static final String SIMCARDS = "simcards.jpg";
     static final String WEBSITE = "website.jpg";
     static final String VOLCANO = "volcano.jpg";
-    static final String AVATAR = "avatar.jpg"; // 1280 x 1280
+    static final String AVATAR = "avatar.jpg"; // 1280 x 1280 // Unoptimizable
     static final String SEA = "sea.png";
     static final String COLOMBIA = "colombia.gif";
-    static final String CHINA = "china.bmp";
+    static final String CHINA = "china.bmp"; // Optimizable
     static final String THAILAND = "thailand.jpg"; // 800 x 600
     static final String LOGOTYPE = "logotype.png"; // 1024 x 1024
+    static final String DALTONIC_WITH_ADOBE_ICC_PROFILE = "daltonic-with-icc-profile-adobergb1998.jpg";
+    static final String DALTONIC_WITHOUT_ICC_PROFILE = "daltonic-without-icc-profile.jpg";
 
     private static final String OUT_DIRECTORY = "out/images/";
 
