@@ -71,8 +71,8 @@ public class MetadataTest extends BaseTest {
         IIOMetadata originalMetadata = metadataReader.getMetadata(original);
         IIOMetadata optimizedMetadata = metadataReader.getMetadata(optimized);
 
-        new MetadataDisplayer().displayMetadata(metadataReader.getMetadata(original));
-        new MetadataDisplayer().displayMetadata(metadataReader.getMetadata(optimized));
+        new MetadataDisplayer().displayMetadata(originalMetadata);
+        new MetadataDisplayer().displayMetadata(optimizedMetadata);
 
         //TODO compare the Metadata to assert that they're the same
     }
@@ -82,8 +82,8 @@ public class MetadataTest extends BaseTest {
         IIOMetadata originalMetadata = metadataReader.getMetadata(original);
         IIOMetadata optimizedMetadata = metadataReader.getMetadata(optimized);
 
-        new MetadataDisplayer().displayMetadata(metadataReader.getMetadata(original));
-        new MetadataDisplayer().displayMetadata(metadataReader.getMetadata(optimized));
+        new MetadataDisplayer().displayMetadata(originalMetadata);
+        new MetadataDisplayer().displayMetadata(optimizedMetadata);
 
         //TODO compare the Metadata to assert that they're not the same
     }
