@@ -31,9 +31,6 @@ public class JpegOptimizer {
         if (maxVisualDiff < 0 || maxVisualDiff > 100) {
             throw new IllegalArgumentException("maxVisualDiff should be a percentage between 0 and 100");
         }
-//        if (!maxWeightIsDefined(maxWeight)) {
-//            maxWeight = source.length;
-//        }
 
         long start = System.currentTimeMillis();
         InternalResult optimizedPicture = getOptimizedPicture(source, maxVisualDiff, maxWeight, keepMetadata);
