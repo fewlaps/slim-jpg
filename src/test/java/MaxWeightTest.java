@@ -1,7 +1,5 @@
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class MaxWeightTest extends BaseTest {
 
     /**
@@ -12,10 +10,10 @@ public class MaxWeightTest extends BaseTest {
     public void testSimCards() {
         String file = SIMCARDS;
         int maxWeight = 300 * 1024;
-        test(file, 305925, 0.5, maxWeight, true);
-        test(file, 300705, 0.5, maxWeight, false);
-        test(file, 305925, 1, maxWeight, true);
-        test(file, 300705, 1, maxWeight, false);
+        test(file, 305925, null, 0.5, maxWeight, true);
+        test(file, 300705, null, 0.5, maxWeight, false);
+        test(file, 305925, null, 1, maxWeight, true);
+        test(file, 300705, null, 1, maxWeight, false);
     }
 
     /**
@@ -26,15 +24,15 @@ public class MaxWeightTest extends BaseTest {
     public void testAvatar() {
         String file = AVATAR;
         int maxWeight = 100 * 1024;
-        test(file, 101451, 0.5, maxWeight, true);
-        test(file, 101258, 0.5, maxWeight, false);
-        test(file, 101451, 1, maxWeight, true);
+        test(file, 101451, null, 0.5, maxWeight, true);
+        test(file, 101258, null, 0.5, maxWeight, false);
+        test(file, 101451, null, 1, maxWeight, true);
 
-        test(file, 101258, 0, maxWeight, false);
-        test(file, 101258, 0.5, maxWeight, false);
-        test(file, 101258, 1, maxWeight, false);
-        test(file, 70952, 2, maxWeight, false);
-        test(file, 47249, 3, maxWeight, false);
-        test(file, 41877, 4, maxWeight, false);
+        test(file, 101258, null, 0, maxWeight, false);
+        test(file, 101258, null, 0.5, maxWeight, false);
+        test(file, 101258, null, 1, maxWeight, false);
+        test(file, 70952, null, 2, maxWeight, false);
+        test(file, 47249, null, 3, maxWeight, false);
+        test(file, 41877, null, 4, maxWeight, false);
     }
 }

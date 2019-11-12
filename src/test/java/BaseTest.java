@@ -28,7 +28,7 @@ class BaseTest {
 
     private static final String OUT_DIRECTORY = "out/images/";
 
-    void test(String picture, long expectedWeight, double maxVisualDiff, int maxWeight, boolean keepMetadata) {
+    void test(String picture, long expectedWeight, Integer expectedIterations, double maxVisualDiff, int maxWeight, boolean keepMetadata) {
         try {
             System.out.println("\n------------------\n\n- Request: ");
             System.out.println("Filename: " + picture);
@@ -63,6 +63,9 @@ class BaseTest {
                 assertTrue(difference < maxVisualDiff);
             }
 
+            if (expectedIterations != null) {
+                assertEquals((int) expectedIterations, optimized.getIterationsMade());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -76,6 +79,7 @@ class BaseTest {
         System.out.println("Saved size: " + formatFileSize((optimized.getSavedBytes())));
         System.out.println("Saved ratio: " + formatPercentage(optimized.getSavedRatio()));
         System.out.println("JPEG quality used: " + optimized.getJpegQualityUsed() + "%");
+        System.out.println("Iterations made: " + optimized.getIterationsMade());
         System.out.println("Time: " + formatElapsedTime(optimized.getElapsedTime()));
 
         try {

@@ -5,4 +5,5 @@ data class Result(
         val elapsedTime: Long,
         val savedBytes: Long,
         val savedRatio: Double,
-        val jpegQualityUsed: Int)
+        val jpegQualityUsed: Int,
+        val iterationsMade: Int)

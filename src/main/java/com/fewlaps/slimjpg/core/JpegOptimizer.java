@@ -43,16 +43,33 @@ public class JpegOptimizer {
                 elapsedTime,
                 calculator.getSavedBytes(),
                 calculator.getSavedRatio(),
-                optimizedPicture.getJpegQualityUsed()
+                optimizedPicture.getJpegQualityUsed(),
+                optimizedPicture.getIterationsMade()
         );
     }
 
     private InternalResult getOptimizedPicture(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
+        int iterationsMade = 0;
         if (!checker.isJpeg(source)) {
             source = compressor.writeJpg(source, MAX_JPEG_QUALITY, keepMetadata);
         }
 
         BufferedImage sourceBufferedImage = ImageIO.read(new ByteArrayInputStream(source));
+
+        if (maxVisualDiff == 0.0) {
+            int quality = 100;
+            byte[] result = compressor.writeJpg(source, quality, keepMetadata);
+            if (keepMetadata) {
+                if (result.length > source.length) {
+                    result = source;
+                }
+            }
+            return new InternalResult(
+                    result,
+                    quality,
+                    iterationsMade
+            );
+        }
 
         int minQuality = MIN_JPEG_QUALITY;
         int maxQuality = MAX_JPEG_QUALITY;
@@ -66,6 +83,8 @@ public class JpegOptimizer {
             } else {
                 minQuality = quality + 1;
             }
+
+            iterationsMade++;
         }
 
         byte[] result;
@@ -80,12 +99,16 @@ public class JpegOptimizer {
                 quality = MAX_JPEG_QUALITY;
             }
         } else {
-            result = source;
+            result = compressor.writeJpg(source, quality, keepMetadata);
+            if (result.length > source.length) {
+                result = source;
+            }
         }
 
         return new InternalResult(
                 result,
-                quality
+                quality,
+                iterationsMade
         );
     }
 
