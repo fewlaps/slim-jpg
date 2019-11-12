@@ -76,9 +76,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testBmpFile() {
         String file = CHINA;
-        test(file, 389341, null, 0, IGNORE_MAX_WEIGHT, true);
+        test(file, 376871, null, 0, IGNORE_MAX_WEIGHT, true);
         test(file, 376871, null, 0, IGNORE_MAX_WEIGHT, false);
-        test(file, 389341, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 376871, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 376871, null, 0.5, IGNORE_MAX_WEIGHT, false);
         test(file, 235193, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 235193, null, 1, IGNORE_MAX_WEIGHT, false);
@@ -109,7 +109,7 @@ public class MaxDiffTest extends BaseTest {
     public void optimizedPicturesCantWeightMoreThanOriginalOnes_keepingMetadata() {
         int maxVisualDiff = 0;
         test(SIMCARDS, getWeight(SIMCARDS), null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
-        test(WEBSITE, 134156, null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
+        test(WEBSITE, 128438, null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
     }
 
     @Test

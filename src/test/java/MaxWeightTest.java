@@ -28,7 +28,7 @@ public class MaxWeightTest extends BaseTest {
         test(file, 101258, null, 0.5, maxWeight, false);
         test(file, 101451, null, 1, maxWeight, true);
 
-        test(file, 101258, null, 0, maxWeight, false);
+        test(file, 672060, null, 0, maxWeight, false); //This image is huge because it saves the metadata
         test(file, 101258, null, 0.5, maxWeight, false);
         test(file, 101258, null, 1, maxWeight, false);
         test(file, 70952, null, 2, maxWeight, false);
