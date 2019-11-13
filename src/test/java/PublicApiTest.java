@@ -2,7 +2,6 @@ import com.fewlaps.slimjpg.RequestCreator;
 import com.fewlaps.slimjpg.SlimJpg;
 import com.fewlaps.slimjpg.core.Result;
 import org.junit.Test;
-import sun.security.x509.AVA;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,20 +12,6 @@ import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class PublicApiTest extends BaseTest {
-
-    private byte[][] pictures = new byte[][]{
-            getBytes(SIMCARDS),
-            getBytes(WEBSITE),
-            getBytes(VOLCANO),
-            getBytes(AVATAR),
-            getBytes(SEA),
-            getBytes(COLOMBIA),
-            getBytes(CHINA),
-            getBytes(THAILAND),
-            getBytes(LOGOTYPE),
-            getBytes(DALTONIC_WITH_ADOBE_ICC_PROFILE),
-            getBytes(DALTONIC_WITHOUT_ICC_PROFILE),
-    };
 
     @Test
     public void minimalCall_withAllPictures() {

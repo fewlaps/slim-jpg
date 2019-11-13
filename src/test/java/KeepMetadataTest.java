@@ -11,9 +11,8 @@ import java.io.IOException;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-public class MetadataTest extends BaseTest {
+public class KeepMetadataTest extends BaseTest {
 
-    private static final int IGNORE_MAX_WEIGHT = -1;
     public static final String UNKNOWN_MARKER = "unknown";
     public static final String ADOBE_MARKER = "app14Adobe";
 

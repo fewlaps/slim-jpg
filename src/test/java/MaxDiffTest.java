@@ -2,8 +2,6 @@ import org.junit.Test;
 
 public class MaxDiffTest extends BaseTest {
 
-    private static final int IGNORE_MAX_WEIGHT = -1;
-
     /**
      * This picture has a very complex background.
      * It's a picture taken with an iPhone 6S.

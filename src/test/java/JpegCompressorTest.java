@@ -2,7 +2,6 @@ import com.fewlaps.slimjpg.core.util.JpegCompressor;
 import file.BinaryFileWriter;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 public class JpegCompressorTest extends BaseTest {

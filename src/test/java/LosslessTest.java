@@ -2,8 +2,6 @@ import org.junit.Test;
 
 public class LosslessTest extends BaseTest {
 
-    private static final int IGNORE_MAX_WEIGHT = -1;
-
     /** These tests also check that the way to know the JPEG quality
      */
 

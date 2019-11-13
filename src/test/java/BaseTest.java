@@ -28,7 +28,23 @@ class BaseTest {
     static final String DALTONIC_WITH_ADOBE_ICC_PROFILE = "daltonic-with-icc-profile-adobergb1998.jpg";
     static final String DALTONIC_WITHOUT_ICC_PROFILE = "daltonic-without-icc-profile.jpg";
 
+    public static final int IGNORE_MAX_WEIGHT = -1;
+
     private static final String OUT_DIRECTORY = "out/images/";
+
+    public byte[][] pictures = new byte[][]{
+            getBytes(SIMCARDS),
+            getBytes(WEBSITE),
+            getBytes(VOLCANO),
+            getBytes(AVATAR),
+            getBytes(SEA),
+            getBytes(COLOMBIA),
+            getBytes(CHINA),
+            getBytes(THAILAND),
+            getBytes(LOGOTYPE),
+            getBytes(DALTONIC_WITH_ADOBE_ICC_PROFILE),
+            getBytes(DALTONIC_WITHOUT_ICC_PROFILE),
+    };
 
     void test(String picture, long expectedWeight, Integer expectedIterations, double maxVisualDiff, int maxWeight, boolean keepMetadata) {
         try {
