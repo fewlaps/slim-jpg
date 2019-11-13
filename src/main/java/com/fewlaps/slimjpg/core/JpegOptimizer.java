@@ -24,6 +24,17 @@ public class JpegOptimizer {
         checker = new JpegChecker();
     }
 
+    public Result optimize(byte[] source, double maxVisualDiff, long maxWeight) throws IOException {
+        Result withMetadata = optimize(source, maxVisualDiff, maxWeight, true);
+        Result withoutMetadata = optimize(source, maxVisualDiff, maxWeight, false);
+
+        if (withMetadata.getSavedBytes() > withoutMetadata.getSavedBytes()) {
+            return withMetadata;
+        } else {
+            return withoutMetadata;
+        }
+    }
+
     public Result optimize(byte[] source, double maxVisualDiff, long maxWeight, boolean keepMetadata) throws IOException {
         if (source == null) {
             throw new IllegalArgumentException("source should contain the byte[] of a JPEG image");
