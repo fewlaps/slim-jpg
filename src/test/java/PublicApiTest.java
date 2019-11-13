@@ -2,6 +2,7 @@ import com.fewlaps.slimjpg.RequestCreator;
 import com.fewlaps.slimjpg.SlimJpg;
 import com.fewlaps.slimjpg.core.Result;
 import org.junit.Test;
+import sun.security.x509.AVA;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -10,106 +11,98 @@ import java.io.InputStream;
 
 import static com.fewlaps.slimjpg.core.util.ReadableUtils.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class PublicApiTest extends BaseTest {
 
-    @Test
-    public void minimalCall_avatar() {
-        byte[] file = getAvatar();
-        Result result = SlimJpg.file(file)
-                .optimize();
+    private byte[][] pictures = new byte[][]{
+            getBytes(SIMCARDS),
+            getBytes(WEBSITE),
+            getBytes(VOLCANO),
+            getBytes(AVATAR),
+            getBytes(SEA),
+            getBytes(COLOMBIA),
+            getBytes(CHINA),
+            getBytes(THAILAND),
+            getBytes(LOGOTYPE),
+            getBytes(DALTONIC_WITH_ADOBE_ICC_PROFILE),
+            getBytes(DALTONIC_WITHOUT_ICC_PROFILE),
+    };
 
-        System.out.println("- Avatar minimal call");
-        printOptimizationResult(file, result);
+    @Test
+    public void minimalCall_withAllPictures() {
+        for (byte[] picture : pictures) {
+            doMinimalCall(picture);
+        }
     }
 
     @Test
-    public void minimalCall_thailand() {
-        byte[] file = getThailand();
-        Result result = SlimJpg.file(file)
-                .optimize();
-
-        System.out.println("- Thailand minimal call");
-        printOptimizationResult(file, result);
+    public void commonCall_withAllPictures() {
+        for (byte[] picture : pictures) {
+            doCommonCall(picture);
+        }
     }
 
     @Test
-    public void commonCall_avatar() {
-        byte[] file = getAvatar();
-        Result result = SlimJpg.file(file)
+    public void smallFileCall_avatar() {
+        for (byte[] picture : pictures) {
+            doSmallFileCall(picture);
+        }
+    }
+
+    private void doMinimalCall(byte[] picture) {
+        Result result = SlimJpg.file(picture)
+                .optimize();
+
+        System.out.println("- Minimal call");
+        printOptimizationResult(picture, result);
+    }
+
+    private void doCommonCall(byte[] picture) {
+        Result result = SlimJpg.file(picture)
                 .maxVisualDiff(0.5)
                 .maxFileWeightInKB(200)
-                .deleteMetadata()
+                .useOptimizedMetadata()
                 .optimize();
 
-        System.out.println("- Avatar common call");
-        printOptimizationResult(file, result);
+        System.out.println("- Common call");
+        printOptimizationResult(picture, result);
     }
 
-    @Test
-    public void commonCall_thailand() {
-        byte[] file = getThailand();
-        Result result = SlimJpg.file(file)
-                .maxVisualDiff(0.5)
-                .maxFileWeightInKB(200)
-                .deleteMetadata()
-                .optimize();
-
-        System.out.println("- Thailand common call");
-        printOptimizationResult(file, result);
-    }
-
-    @Test
-    public void aggressiveCall_avatar() {
-        byte[] file = getAvatar();
-        Result result = SlimJpg.file(file)
+    private void doSmallFileCall(byte[] picture) {
+        Result result = SlimJpg.file(picture)
                 .maxVisualDiff(1)
                 .maxFileWeightInKB(50)
-                .keepMetadata()
+                .useOptimizedMetadata()
                 .optimize();
 
-        System.out.println("- Avatar aggressive call");
-        printOptimizationResult(file, result);
+        System.out.println("- Small file call");
+        printOptimizationResult(picture, result);
     }
 
     @Test
-    public void aggressiveCall_thailand() {
-        byte[] file = getThailand();
-        Result result = SlimJpg.file(file)
-                .maxVisualDiff(1)
-                .maxFileWeightInKB(50)
-                .keepMetadata()
-                .optimize();
-
-        System.out.println("- Thailand aggressive call");
-        printOptimizationResult(file, result);
-    }
-
-    @Test
-    public void byDefault_maxVisualDiff_isMaximum() {
-        RequestCreator request = SlimJpg.file(getAvatar());
+    public void byDefault_maxVisualDiff_isZero() {
+        RequestCreator request = SlimJpg.file(getBytes(AVATAR));
         double maxVisualDiff = request.getMaxVisualDiff();
         assertEquals(0.0, maxVisualDiff, 0.1);
     }
 
     @Test
     public void byDefault_maxFileWeight_isNotApplied() {
-        RequestCreator request = SlimJpg.file(getAvatar());
+        RequestCreator request = SlimJpg.file(getBytes(AVATAR));
         long maxFileWeight = request.getMaxFileWeight();
         assertEquals(-1, maxFileWeight);
     }
 
     @Test
-    public void byDefault_metadata_isDeleted() {
-        RequestCreator request = SlimJpg.file(getAvatar());
-        boolean keepMetadata = request.getKeepMetadata();
-        assertFalse(keepMetadata);
+    public void byDefault_metadata_isOptimized() {
+        RequestCreator request = SlimJpg.file(getBytes(AVATAR));
+        RequestCreator.MetadataPolicy metadataPolicy = request.getMetadataPolicy();
+        assertEquals(metadataPolicy, RequestCreator.MetadataPolicy.WHATEVER_GIVES_SMALLER_FILES);
     }
 
     @Test
     public void inputCanBeAInputStream() {
-        byte[] file = getAvatar();
+        byte[] file = getBytes(AVATAR);
         InputStream inputStream = new ByteArrayInputStream(file);
         SlimJpg.file(inputStream).optimize();
     }
@@ -126,14 +119,6 @@ public class PublicApiTest extends BaseTest {
         SlimJpg.file(input).optimize();
     }
 
-    private byte[] getAvatar() {
-        return getBytes(AVATAR);
-    }
-
-    private byte[] getThailand() {
-        return getBytes(THAILAND);
-    }
-
     private void printOptimizationResult(byte[] file, Result result) {
         System.out.println("Original size: " + formatFileSize(file.length));
         System.out.println("Optimized size: " + formatFileSize(result.getPicture().length));
@@ -141,5 +126,6 @@ public class PublicApiTest extends BaseTest {
         System.out.println("Saved ratio: " + formatPercentage(result.getSavedRatio()));
         System.out.println("JPEG quality used: " + result.getJpegQualityUsed() + "%");
         System.out.println("Time: " + formatElapsedTime(result.getElapsedTime()));
+        System.out.println("Iterations: " + formatElapsedTime(result.getIterationsMade()));
     }
 }
