@@ -3,6 +3,9 @@ package com.fewlaps.slimjpg.core
 import com.fewlaps.slimjpg.core.util.BufferedImageComparator
 import com.fewlaps.slimjpg.core.util.JpegChecker
 import com.fewlaps.slimjpg.core.util.JpegCompressor
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -17,14 +20,23 @@ class JpegOptimizer {
 
     @Throws(IOException::class)
     fun optimize(source: ByteArray, maxVisualDiff: Double, maxWeight: Long): Result {
-        val withMetadata = optimize(source, maxVisualDiff, maxWeight, true)
-        val withoutMetadata = optimize(source, maxVisualDiff, maxWeight, false)
+        return runBlocking {
+            val withMetadataAsync = optimizeAsync(source, maxVisualDiff, maxWeight, true)
+            val withoutMetadataAsync = optimizeAsync(source, maxVisualDiff, maxWeight, false)
 
-        return if (withMetadata.savedBytes > withoutMetadata.savedBytes) {
-            withMetadata
-        } else {
-            withoutMetadata
+            val withMetadata = withMetadataAsync.await()
+            val withoutMetadata = withoutMetadataAsync.await()
+
+            return@runBlocking if (withMetadata.savedBytes > withoutMetadata.savedBytes) {
+                withMetadata
+            } else {
+                withoutMetadata
+            }
         }
+    }
+
+    fun optimizeAsync(source: ByteArray, maxVisualDiff: Double, maxWeight: Long, keepMetadata: Boolean) = GlobalScope.async {
+        return@async optimize(source, maxVisualDiff, maxWeight, keepMetadata)
     }
 
     @Throws(IOException::class)
