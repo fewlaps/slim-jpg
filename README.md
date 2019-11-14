@@ -15,13 +15,13 @@ Instead of setting the JPEG quality, SlimJPG receives a maximum visual differenc
 
 In addition, you can set a max file weight. You can request an optimized picture that doesn't weight more than 50kB. SlimJPG will give you the best picture that JPEG compression can.
 
-Are you concerned about your user's privacy? SlimJPG can keep the metadata or delete it of the resulting picture.
+What about the picture's metadata? For example, if you're concerned with removing the user's geolocation, you can delete it from the resulting picture. In the other hand, if you prefer to keep the Color Profile from the original source, you can choose to keep it. In addition, if you don't mind to keep or to discard the metadata, SlimJPG will give you a picture with or without it, choosing the option that gives a smaller file.
 
 
 ## Ok, show me the code
 
 ```java
-// A lossless optimization of your image
+// An almost lossless optimization of your image
 SlimJpg.file(byteArray).optimize();
 SlimJpg.file(inputStream).optimize();
 SlimJpg.file(file).optimize();
@@ -36,14 +36,19 @@ SlimJpg.file(picture)
                 .maxFileWeightInKB(50)
                 .optimize();
 
-// A lossless optimization deleting the metadata
+// An almost lossless optimization deleting the metadata
 SlimJpg.file(picture)
                 .deleteMetadata()
                 .optimize();
 
-// A lossless optimization keeping the metadata
+// An almost lossless optimization keeping the metadata
 SlimJpg.file(picture)
                 .keepMetadata()
+                .optimize();
+
+// An almost lossless optimization choosing the optimised metadata value
+SlimJpg.file(picture)
+                .useOptimizedMetadata()
                 .optimize();
 
 // Use the whole criteria the API offers
