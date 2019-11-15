@@ -92,6 +92,12 @@ Of course! These computations have been made in a MacBook PRO 13" 2015 with only
 
 Nope. SlimJpeg targets the rocky server-side guys. The library uses `javax.imageio.ImageIO` that is not included in Android. D'oh! If you try it you'll end with a `java.lang.NoClassDefFoundError: Failed resolution of: Ljavax/imageio/ImageIO;`. It was harder for me than for you...
 
+## How does SlimJPG manage the color profiles?
+
+The embedded color profile of a JPG is stored in its metadata. So, if you have a JPG with an embedded color profile and you need to have it embedded also in the optimized JPG, tell the library to keep the picture's metadata. This is usually needed when you intend to print that optimized JPG on paper or fabric, like the photographs or the fashion designers do. If you plan to display your images on computer or phone screens, usually you don't need to keep the color profiles.
+
+In case you're managing JPGs with an embedded color profile and you delete its metadata, the resulting JPG will have no color profile, so the default sRGB will be used. That's what the JPG standard says. But don't worry: if the source picture had another color profile, let's say Adobe RGB 1998, SlimJPG will convert those colors to sRGB and save the picture without a color profile, so the browser or app that displays the JPG will successfully use sRGB.
+
 
 # Download
 
