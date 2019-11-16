@@ -10,7 +10,7 @@ public class HardwareUseTest extends BaseTest {
         long startTime = System.currentTimeMillis();
 
         long i = 0;
-        long testTime = 1000 * 60 * 10;
+        long testTime = 1000 * 60 * 5;
         while ((startTime + testTime) > System.currentTimeMillis()) {
             for (byte[] picture : pictures) {
                 doCommonCall(picture);
