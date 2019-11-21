@@ -7,7 +7,7 @@ public class LosslessTest extends BaseTest {
 
     @Test
     public void losslessOptimizations_inOptimizableFiles_shouldReturnANewFile() {
-        test(CHINA, 376871, 0, 0, IGNORE_MAX_WEIGHT, true);
+        test(CHINA, 308987, 0, 0, IGNORE_MAX_WEIGHT, true);
     }
 
     @Test

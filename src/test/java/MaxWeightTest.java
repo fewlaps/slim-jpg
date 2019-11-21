@@ -10,9 +10,9 @@ public class MaxWeightTest extends BaseTest {
     public void testSimCards() {
         String file = SIMCARDS;
         int maxWeight = 300 * 1024;
-        test(file, 305925, null, 0.5, maxWeight, true);
+        test(file, 301894, null, 0.5, maxWeight, true);
         test(file, 300705, null, 0.5, maxWeight, false);
-        test(file, 305925, null, 1, maxWeight, true);
+        test(file, 301894, null, 1, maxWeight, true);
         test(file, 300705, null, 1, maxWeight, false);
     }
 
@@ -24,9 +24,9 @@ public class MaxWeightTest extends BaseTest {
     public void testAvatar() {
         String file = AVATAR;
         int maxWeight = 100 * 1024;
-        test(file, 101451, null, 0.5, maxWeight, true);
+        test(file, 102307, null, 0.5, maxWeight, true);
         test(file, 101258, null, 0.5, maxWeight, false);
-        test(file, 101451, null, 1, maxWeight, true);
+        test(file, 102307, null, 1, maxWeight, true);
 
         test(file, 672060, null, 0, maxWeight, false); //This image is huge because it saves the metadata
         test(file, 101258, null, 0.5, maxWeight, false);

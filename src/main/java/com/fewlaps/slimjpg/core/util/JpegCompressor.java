@@ -2,6 +2,7 @@ package com.fewlaps.slimjpg.core.util;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
@@ -28,7 +29,7 @@ public class JpegCompressor {
         final ImageWriter writer = ImageIO.getImageWritersByFormatName(JPG).next();
         writer.setOutput(imageOutputStream);
 
-        ImageWriteParam writeParam = writer.getDefaultWriteParam();
+        JPEGImageWriteParam writeParam = (JPEGImageWriteParam) writer.getDefaultWriteParam();
         writeParam.setCompressionMode(MODE_EXPLICIT);
 
         float appliedQuality = quality / 100f;
@@ -41,6 +42,7 @@ public class JpegCompressor {
         IIOMetadata metadata = null;
         if (keepMetadata) {
             metadata = reader.getImageMetadata(0);
+            writeParam.setOptimizeHuffmanTables(true);
         }
 
         try {

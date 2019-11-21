@@ -9,9 +9,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testSimCards() {
         String file = SIMCARDS;
-        test(file, 1411471, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 1348751, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 1406130, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 591590, null, 1, IGNORE_MAX_WEIGHT, true);
+        test(file, 480229, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 586350, null, 1, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -22,9 +22,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testEthiopiaVolcano() {
         String file = VOLCANO;
-        test(file, 776229, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 665642, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 770116, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 312175, null, 1, IGNORE_MAX_WEIGHT, true);
+        test(file, 190608, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 306115, null, 1, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -35,9 +35,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testQuitNow() {
         String file = WEBSITE;
-        test(file, 59115, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 47355, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 59115, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 31805, null, 1, IGNORE_MAX_WEIGHT, true);
+        test(file, 34726, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 31805, null, 1, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -48,9 +48,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testPngFile() {
         String file = SEA;
-        test(file, 551861, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 539078, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 219774, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 313948, null, 1, IGNORE_MAX_WEIGHT, true);
+        test(file, 313590, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 120724, null, 1, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -61,9 +61,9 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testGifFile() {
         String file = COLOMBIA;
-        test(file, 1060136, null, 0.5, IGNORE_MAX_WEIGHT, true); //TODO: The resulting file is huge
+        test(file, 1017511, null, 0.5, IGNORE_MAX_WEIGHT, true); //TODO: The resulting file is huge
         test(file, 471160, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 835382, null, 1, IGNORE_MAX_WEIGHT, true); //TODO: The resulting file is huge
+        test(file, 819693, null, 1, IGNORE_MAX_WEIGHT, true); //TODO: The resulting file is huge
         test(file, 292446, null, 1, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -74,13 +74,13 @@ public class MaxDiffTest extends BaseTest {
     @Test
     public void testBmpFile() {
         String file = CHINA;
-        test(file, 376871, null, 0, IGNORE_MAX_WEIGHT, true);
+        test(file, 308987, null, 0, IGNORE_MAX_WEIGHT, true);
         test(file, 376871, null, 0, IGNORE_MAX_WEIGHT, false);
-        test(file, 376871, null, 0.5, IGNORE_MAX_WEIGHT, true);
+        test(file, 308987, null, 0.5, IGNORE_MAX_WEIGHT, true);
         test(file, 376871, null, 0.5, IGNORE_MAX_WEIGHT, false);
-        test(file, 235193, null, 1, IGNORE_MAX_WEIGHT, true);
+        test(file, 217763, null, 1, IGNORE_MAX_WEIGHT, true);
         test(file, 235193, null, 1, IGNORE_MAX_WEIGHT, false);
-        test(file, 141834, null, 2, IGNORE_MAX_WEIGHT, true);
+        test(file, 139405, null, 2, IGNORE_MAX_WEIGHT, true);
         test(file, 141834, null, 2, IGNORE_MAX_WEIGHT, false);
     }
 
@@ -107,7 +107,7 @@ public class MaxDiffTest extends BaseTest {
     public void optimizedPicturesCantWeightMoreThanOriginalOnes_keepingMetadata() {
         int maxVisualDiff = 0;
         test(SIMCARDS, getWeight(SIMCARDS), null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
-        test(WEBSITE, 128438, null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
+        test(WEBSITE, 134156, null, maxVisualDiff, IGNORE_MAX_WEIGHT, true);
     }
 
     @Test
