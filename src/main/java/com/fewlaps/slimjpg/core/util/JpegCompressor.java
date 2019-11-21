@@ -50,7 +50,7 @@ public class JpegCompressor {
             return outputStream.toByteArray();
         } catch (Exception e) {
             dispose(reader, writer);
-            return writeJpg(input, quality, false);
+            throw new RuntimeException(e);
         }
     }
 
