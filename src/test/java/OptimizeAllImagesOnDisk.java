@@ -1,3 +1,4 @@
+import com.fewlaps.slimjpg.SlimJpg;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,6 +35,7 @@ public class OptimizeAllImagesOnDisk extends BaseTest {
                 foundPictures += extract(x.getPath());
             } else {
                 if (acceptedExtensions.contains(extension(x.getName()))) {
+                    SlimJpg.file(x).optimize();
                     foundPictures++;
                 }
             }
