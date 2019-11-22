@@ -105,7 +105,7 @@ In case you're managing JPGs with an embedded color profile and you delete its m
 ```groovy
 repositories { jcenter() }
     
-compile 'com.fewlaps.slimjpg:slimjpg:1.3.1'
+compile 'com.fewlaps.slimjpg:slimjpg:1.3.2'
 ```
 * Maven:
 ```xml
@@ -117,7 +117,7 @@ compile 'com.fewlaps.slimjpg:slimjpg:1.3.1'
 <dependency>
     <groupId>com.fewlaps.slimjpg</groupId>
     <artifactId>slimjpg</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
 </dependency>
 ```
 
