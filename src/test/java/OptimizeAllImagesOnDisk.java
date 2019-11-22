@@ -1,5 +1,6 @@
 import com.fewlaps.slimjpg.SlimJpg;
 import com.fewlaps.slimjpg.core.Result;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,6 +24,7 @@ public class OptimizeAllImagesOnDisk extends BaseTest {
     );
 
     @Test
+    @Ignore(value = "It doesn't pass on Travis because it needs too much CPU time")
     public void optimizeAllPicturesOnDisk() {
         int foundPictures = extract("/");
         System.out.println("Found " + foundPictures + " pictures");
