@@ -1,6 +1,9 @@
 package com.fewlaps.slimjpg.core.util;
 
-import javax.imageio.*;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
@@ -8,7 +11,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
 
 import static javax.imageio.ImageWriteParam.MODE_EXPLICIT;
@@ -17,7 +19,7 @@ public class JpegCompressor {
 
     private static final String JPG = "jpg";
 
-    public byte[] writeJpg(byte[] input, int quality, boolean keepMetadata) throws IOException {
+    public byte[] writeJpg(byte[] input, int quality, boolean keepMetadata) throws Exception {
         ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(input));
         Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
         ImageReader reader = readers.next();
@@ -52,7 +54,7 @@ public class JpegCompressor {
             return outputStream.toByteArray();
         } catch (Exception e) {
             dispose(reader, writer);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

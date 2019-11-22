@@ -9,7 +9,7 @@ public class JpegCompressorTest extends BaseTest {
     private static final String OUT_DIRECTORY = "out/jpeg-qualities/";
 
     @Test
-    public void useAllJpegQualities() {
+    public void useAllJpegQualities() throws Exception {
         JpegCompressor compressor = new JpegCompressor();
         byte[] image = getBytes(AVATAR);
 

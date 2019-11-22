@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.IOException
+import javax.imageio.IIOException
 import javax.imageio.ImageIO
 import kotlin.math.floor
 
@@ -44,7 +45,7 @@ class JpegOptimizer {
         require(!(maxVisualDiff < 0 || maxVisualDiff > 100)) { "maxVisualDiff should be a percentage between 0 and 100" }
 
         val start = System.currentTimeMillis()
-        val (picture, jpegQualityUsed, iterationsMade) = getOptimizedPicture(source, maxVisualDiff, maxWeight, keepMetadata)
+        val (picture, jpegQualityUsed, iterationsMade, internalError) = getOptimizedPicture(source, maxVisualDiff, maxWeight, keepMetadata)
         val end = System.currentTimeMillis()
 
         val elapsedTime = end - start
@@ -55,76 +56,86 @@ class JpegOptimizer {
                 calculator.getSavedBytes().toLong(),
                 calculator.getSavedRatio()!!,
                 jpegQualityUsed,
-                iterationsMade
+                iterationsMade,
+                internalError
         )
     }
 
     @Throws(IOException::class)
     private fun getOptimizedPicture(source: ByteArray, maxVisualDiff: Double, maxWeight: Long, keepMetadata: Boolean): InternalResult {
-        var iterationsMade = 0
+        try {
+            var iterationsMade = 0
 
-        val jpegSource = if (!checker.isJpeg(source)) {
-            compressor.writeJpg(source, MAX_JPEG_QUALITY, keepMetadata)
-        } else {
-            source
-        }
+            val jpegSource = if (!checker.isJpeg(source)) {
+                compressor.writeJpg(source, MAX_JPEG_QUALITY, keepMetadata)
+            } else {
+                source
+            }
 
-        val sourceBufferedImage = ImageIO.read(ByteArrayInputStream(jpegSource))
+            val sourceBufferedImage = ImageIO.read(ByteArrayInputStream(jpegSource))
 
-        if (maxVisualDiff == 0.0) {
-            val quality = 100
-            var result = compressor.writeJpg(jpegSource, quality, keepMetadata)
-            if (keepMetadata) {
+            if (maxVisualDiff == 0.0) {
+                val quality = 100
+                var result = compressor.writeJpg(jpegSource, quality, keepMetadata)
+                if (keepMetadata) {
+                    if (result.size > jpegSource.size) {
+                        result = jpegSource
+                    }
+                }
+                return InternalResult(
+                        result,
+                        quality,
+                        iterationsMade
+                )
+            }
+
+            var minQuality = MIN_JPEG_QUALITY
+            var maxQuality = MAX_JPEG_QUALITY
+            var quality = 0
+
+            while (minQuality <= maxQuality) {
+                quality = floor((minQuality + maxQuality) / 2.0).toInt()
+
+                if (isThisQualityTooHigh(jpegSource, sourceBufferedImage, quality, maxVisualDiff, maxWeight, keepMetadata)) {
+                    maxQuality = quality - 1
+                } else {
+                    minQuality = quality + 1
+                }
+
+                iterationsMade++
+            }
+
+            var result: ByteArray
+            if (quality < MAX_JPEG_QUALITY || !keepMetadata) {
+                result = compressor.writeJpg(jpegSource, quality, keepMetadata)
+                if (maxWeightIsDefined(maxWeight) && result.size > maxWeight && quality > 0) {
+                    quality -= 1
+                    result = compressor.writeJpg(jpegSource, quality, keepMetadata)
+                }
+                if (result.size > jpegSource.size && keepMetadata) {
+                    result = jpegSource
+                    quality = MAX_JPEG_QUALITY
+                }
+            } else {
+                result = compressor.writeJpg(jpegSource, quality, keepMetadata)
                 if (result.size > jpegSource.size) {
                     result = jpegSource
                 }
             }
+
             return InternalResult(
                     result,
                     quality,
                     iterationsMade
             )
+        } catch (exception: Exception) {
+            return InternalResult(
+                    source,
+                    100,
+                    0,
+                    exception
+            )
         }
-
-        var minQuality = MIN_JPEG_QUALITY
-        var maxQuality = MAX_JPEG_QUALITY
-        var quality = 0
-
-        while (minQuality <= maxQuality) {
-            quality = floor((minQuality + maxQuality) / 2.0).toInt()
-
-            if (isThisQualityTooHigh(jpegSource, sourceBufferedImage, quality, maxVisualDiff, maxWeight, keepMetadata)) {
-                maxQuality = quality - 1
-            } else {
-                minQuality = quality + 1
-            }
-
-            iterationsMade++
-        }
-
-        var result: ByteArray
-        if (quality < MAX_JPEG_QUALITY || !keepMetadata) {
-            result = compressor.writeJpg(jpegSource, quality, keepMetadata)
-            if (maxWeightIsDefined(maxWeight) && result.size > maxWeight && quality > 0) {
-                quality -= 1
-                result = compressor.writeJpg(jpegSource, quality, keepMetadata)
-            }
-            if (result.size > jpegSource.size && keepMetadata) {
-                result = jpegSource
-                quality = MAX_JPEG_QUALITY
-            }
-        } else {
-            result = compressor.writeJpg(jpegSource, quality, keepMetadata)
-            if (result.size > jpegSource.size) {
-                result = jpegSource
-            }
-        }
-
-        return InternalResult(
-                result,
-                quality,
-                iterationsMade
-        )
     }
 
     @Throws(IOException::class)
