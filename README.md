@@ -98,6 +98,10 @@ The embedded color profile of a JPG is stored in its metadata. So, if you have a
 
 In case you're managing JPGs with an embedded color profile and you delete its metadata, the resulting JPG will have no color profile, so the default sRGB will be used. That's what the JPG standard says. But don't worry: if the source picture had another color profile, let's say Adobe RGB 1998, SlimJPG will convert those colors to sRGB and save the picture without a color profile, so the browser or app that displays the JPG will successfully use sRGB.
 
+## Can I try it online?
+
+Of course! Check https://slimjpg.herokuapp.com and upload some pictures. Right now, it gives pictures of 50KB and a 1% of difference, so expect very compressed files. Someday, the webpage will let you choose the same than SlimJPG does: the max visual difference, max file weight and the metadata policy. And a fancy way to compare the source picture and the result. But in the meantime, the page is so humble.
+
 
 # Download
 
