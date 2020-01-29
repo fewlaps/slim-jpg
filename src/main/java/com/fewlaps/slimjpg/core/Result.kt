@@ -13,10 +13,10 @@ data class Result(
 
     override fun toString(): String {
         val sb = StringBuilder();
-        sb.append("Size: " + ReadableUtils.formatFileSize(picture.size.toLong()) + "\n")
-        sb.append("Saved size: " + ReadableUtils.formatFileSize(savedBytes) + "\n")
-        sb.append("Saved ratio: " + ReadableUtils.formatPercentage(savedRatio) + "\n")
-        sb.append("JPEG quality used: $jpegQualityUsed%" + "\n")
+        sb.append("Size: ${ReadableUtils.formatFileSize(picture.size.toLong())}\n")
+        sb.append("Saved size: ${ReadableUtils.formatFileSize(savedBytes)}\n")
+        sb.append("Saved ratio: ${ReadableUtils.formatPercentage(savedRatio)}\n")
+        sb.append("JPEG quality used: ${ReadableUtils.formatPercentage(jpegQualityUsed)}\n")
         sb.append("Iterations made: $iterationsMade" + "\n")
         sb.append("Time: " + ReadableUtils.formatElapsedTime(elapsedTime) + "\n")
         sb.append("Error: " + (internalError ?: "No"))

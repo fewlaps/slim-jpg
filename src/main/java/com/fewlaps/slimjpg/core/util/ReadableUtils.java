@@ -16,6 +16,10 @@ public class ReadableUtils {
         return new DecimalFormat("#0.00%").format(rate);
     }
 
+    public static String formatPercentage(int rate) {
+        return rate + "%";
+    }
+
     public static String formatElapsedTime(final long l) {
         final long hr = TimeUnit.MILLISECONDS.toHours(l);
         final long min = TimeUnit.MILLISECONDS.toMinutes(l - TimeUnit.HOURS.toMillis(hr));
