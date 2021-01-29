@@ -90,7 +90,7 @@ Of course! These computations have been made in a MacBook PRO 13" 2015 with only
 
 ## May I use it Android?
 
-Nope. SlimJpeg targets the rocky server-side guys. The library uses `javax.imageio.ImageIO` that is not included in Android. D'oh! If you try it you'll end with a `java.lang.NoClassDefFoundError: Failed resolution of: Ljavax/imageio/ImageIO;`. It was harder for me than for you...
+Nope. SlimJPG targets the rocky server-side guys. The library uses `javax.imageio.ImageIO` that is not included in Android. D'oh! If you try it you'll end with a `java.lang.NoClassDefFoundError: Failed resolution of: Ljavax/imageio/ImageIO;`. It was harder for me than for you...
 
 ## How does SlimJPG manage the color profiles?
 
