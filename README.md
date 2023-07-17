@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/Fewlaps/slim-jpg.svg?branch=master)](https://travis-ci.org/Fewlaps/slim-jpg)
 # SlimJPG
 
 This library will convert your JPG, PNG, GIF and BMP pictures to optimized JPG ones.
